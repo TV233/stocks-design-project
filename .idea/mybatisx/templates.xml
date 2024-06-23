@@ -63,7 +63,7 @@
             </option>
             <option name="needsComment" value="true" />
             <option name="needsModel" value="true" />
-            <option name="relativePackage" value="pojo" />
+            <option name="relativePackage" value="pojo/entity" />
             <option name="superClass" value="" />
             <option name="tableUIInfoList">
               <list>
