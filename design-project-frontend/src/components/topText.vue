@@ -10,15 +10,14 @@ import { defineComponent, onMounted, ref } from 'vue';
 import TopTextService from '../services/TopTextService';
 
 export default defineComponent({
-  name: 'TopTextViewer',
   setup() {
     const topText = ref({ positionIndex: 0, title: '', content: '' });
 
     onMounted(() => {
-      TopTextService.getTopText().then(response => {
-        topText.value = response.data;
+      TopTextService.getTopText().then(data => {
+        topText.value = data;
       }).catch(error => {
-        console.error('There was an error!', error);
+        console.error('Error fetching top text:', error);
       });
     });
 
