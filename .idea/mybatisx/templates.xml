@@ -63,13 +63,13 @@
             </option>
             <option name="needsComment" value="true" />
             <option name="needsModel" value="true" />
-            <option name="relativePackage" value="pojo/entity" />
+            <option name="relativePackage" value="pojo.entity" />
             <option name="superClass" value="" />
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="User" />
-                  <option name="tableName" value="user" />
+                  <option name="className" value="TopText" />
+                  <option name="tableName" value="top_text" />
                 </TableUIInfo>
               </list>
             </option>
