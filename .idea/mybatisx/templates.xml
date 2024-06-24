@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="TopText" />
-                  <option name="tableName" value="top_text" />
+                  <option name="className" value="Predict" />
+                  <option name="tableName" value="predict" />
                 </TableUIInfo>
               </list>
             </option>
