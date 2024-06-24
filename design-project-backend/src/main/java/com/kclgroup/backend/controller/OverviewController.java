@@ -1,5 +1,6 @@
 package com.kclgroup.backend.controller;
 
+import com.kclgroup.backend.pojo.entity.Result;
 import com.kclgroup.backend.pojo.entity.TopText;
 import com.kclgroup.backend.service.TopTextService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,9 @@ public class OverviewController {
         return "overview";
     }
     @GetMapping("/top_text")
-    public TopText topText() {
-        return topTextService.getTopText();
+    public Result<TopText> topText() {
+        TopText topText = topTextService.getTopText();
+        return Result.success(topText);
     }
 
 }
