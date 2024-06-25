@@ -2,6 +2,7 @@ package com.kclgroup.backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kclgroup.backend.pojo.entity.Predict;
+import com.kclgroup.backend.pojo.vo.PredictVo;
 import com.kclgroup.backend.service.PredictService;
 import com.kclgroup.backend.mapper.PredictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ public class PredictServiceImpl extends ServiceImpl<PredictMapper, Predict>
 
     @Autowired PredictMapper predictMapper;
     @Override
-    public List<Predict> getPredict() {
-        List<Predict> predict = predictMapper.getPredict();
-        return predict;
+    public List<PredictVo> getPredict() {
+        List<PredictVo> predictVo = predictMapper.getPredict();
+        return predictVo;
     }
 }
 

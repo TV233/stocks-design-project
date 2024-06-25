@@ -2,6 +2,7 @@ package com.kclgroup.backend.service;
 
 import com.kclgroup.backend.pojo.entity.Predict;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kclgroup.backend.pojo.vo.PredictVo;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ import java.util.List;
 */
 public interface PredictService extends IService<Predict> {
 
-    List<Predict> getPredict();
+    List<PredictVo> getPredict();
 }

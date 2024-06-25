@@ -1,6 +1,8 @@
 package com.kclgroup.backend.controller;
 
 import com.kclgroup.backend.pojo.entity.*;
+import com.kclgroup.backend.pojo.vo.PredictVo;
+import com.kclgroup.backend.pojo.vo.StockPriceVo;
 import com.kclgroup.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +26,8 @@ public class OverviewController {
     private MarketStyleService marketStyleService;
     @Autowired
     private PredictService predictService;
+    @Autowired
+    private  StockPricesService stockPricesService;
     @GetMapping
     public String overview() {
         return "overview";
@@ -50,9 +54,14 @@ public class OverviewController {
     }
 
     @GetMapping("/predict")
-    public Result<List<Predict>> predict() {
-        List<Predict> predicts = predictService.getPredict();
+    public Result<List<PredictVo>> predict() {
+        List<PredictVo> predicts = predictService.getPredict();
         return Result.success(predicts);
+    }
+    @GetMapping("/stock_prices")
+    public Result<List<StockPriceVo>> stockPrices() {
+        List<StockPriceVo> stockPrices = stockPricesService.getStockPrices();
+        return Result.success(stockPrices);
     }
 
 
