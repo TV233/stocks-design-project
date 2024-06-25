@@ -1,11 +1,16 @@
 package com.kclgroup.backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kclgroup.backend.pojo.entity.Favor;
+import com.kclgroup.backend.pojo.entity.StockInfo;
 import com.kclgroup.backend.pojo.entity.User;
+import com.kclgroup.backend.service.FavorService;
+import com.kclgroup.backend.service.StockInfoService;
 import com.kclgroup.backend.service.UserService;
 import com.kclgroup.backend.mapper.UserMapper;
 import com.kclgroup.backend.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +25,10 @@ import java.util.Map;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private StockInfoService stockInfoService;
+    @Autowired
+    private FavorService favorService;
     @Override
     public User findByUserName(String username) {
         User u = userMapper.findByUserName(username);
@@ -53,6 +62,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 //        Integer id = (Integer) map.get("id");
 //        userMapper.updatePwd(Md5Util.getMD5String(newPwd),id);
     }
+
+
+
 
 
 }

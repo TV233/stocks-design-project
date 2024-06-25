@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="StockPrices" />
-                  <option name="tableName" value="stock_prices" />
+                  <option name="className" value="Favor" />
+                  <option name="tableName" value="favor" />
                 </TableUIInfo>
               </list>
             </option>

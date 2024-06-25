@@ -1,7 +1,10 @@
 package com.kclgroup.backend.controller;
 
+import com.kclgroup.backend.pojo.entity.Favor;
 import com.kclgroup.backend.pojo.entity.Result;
+import com.kclgroup.backend.pojo.entity.StockInfo;
 import com.kclgroup.backend.pojo.entity.User;
+import com.kclgroup.backend.service.FavorService;
 import com.kclgroup.backend.service.UserService;
 import com.kclgroup.backend.util.JwtUtil;
 import com.kclgroup.backend.util.Md5Util;
@@ -28,6 +31,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+
 
     @PostMapping("/register")
     public Result register(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$") String password) {
@@ -124,4 +129,7 @@ public class UserController {
         operations.getOperations().delete(token);
         return Result.success();
     }
+
+
+
 }
