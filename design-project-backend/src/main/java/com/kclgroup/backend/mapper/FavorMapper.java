@@ -2,6 +2,7 @@ package com.kclgroup.backend.mapper;
 
 import com.kclgroup.backend.pojo.entity.Favor;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -19,6 +20,9 @@ public interface FavorMapper extends BaseMapper<Favor> {
 
     @Insert("insert into favor(username,favor_stock_code,create_time) values (#{username},#{stockCode},now())")
     void addFavor(String username,String stockCode);
+
+    @Delete("delete from favor where username=#{username} and favor_stock_code=#{stockCode}")
+    void deleteFavor(String username, String stockCode);
 }
 
 

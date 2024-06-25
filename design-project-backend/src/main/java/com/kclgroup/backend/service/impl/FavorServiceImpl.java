@@ -28,6 +28,11 @@ public class FavorServiceImpl extends ServiceImpl<FavorMapper, Favor>
         favorMapper.addFavor(username, stockCode);
     }
 
+    @Override
+    public void cancelFavor(String username, String stockCode) {
+        favorMapper.deleteFavor(username,stockCode);
+    }
+
 }
 
 

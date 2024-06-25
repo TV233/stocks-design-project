@@ -12,4 +12,6 @@ public interface FavorService extends IService<Favor> {
 
     Favor getFavor(String username, String stockCode);
     void favor(String username,String stockCode);
+
+    void cancelFavor(String username, String stockCode);
 }

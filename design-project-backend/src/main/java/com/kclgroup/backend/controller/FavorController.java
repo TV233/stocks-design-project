@@ -44,4 +44,21 @@ public class FavorController {
         favorService.favor(username,stockCode);
         return Result.success();
     }
+    @PostMapping("/cancel")
+    public Result cancelFavor(@RequestParam String stockCode) {
+        //1.校验参数
+        if (stockCode == null) {
+            return Result.error("缺少必要的参数");
+        }
+        //2.检验，调用service完成收藏
+        StockInfo stockInfo = stockInfoService.getByStockCode(stockCode);
+        if(stockInfo == null)return Result.error("股票代码不存在");
+
+        Map<String,Object> map = ThreadLocalUtil.get();
+        String username = (String) map.get("username");
+
+        if(favorService.getFavor(username,stockCode) == null)return Result.error("该股票未收藏过");
+        favorService.cancelFavor(username,stockCode);
+        return Result.success();
+    }
 }
