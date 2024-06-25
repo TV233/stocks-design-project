@@ -18,6 +18,15 @@ import java.util.List;
 public interface StockPricesMapper extends BaseMapper<StockPrices> {
     @Select("select p.stock_code,i.stock_name, latest_price, price_change_rate, price_change, rise_speed from stock_prices p,stock_info i where p.stock_code = i.stock_code order by price_change_rate DESC limit 20")
     List<StockPriceVo> getStockPrices();
+    @Select("select latest_price from stock_prices where stock_code=#{stockCode}")
+    String getLatestPrice(String stockCode);
+
+    @Select("select price_change_rate from stock_prices where stock_code=#{stockCode}")
+    String getPriceChangeRate(String stockCode);
+    @Select("select price_change from stock_prices where stock_code=#{stockCode}")
+    String getPriceChange(String stockCode);
+    @Select("select rise_speed from stock_prices where stock_code=#{stockCode}")
+    String getRiseSpeed(String stockCode);
 }
 
 

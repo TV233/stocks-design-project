@@ -9,6 +9,7 @@ import com.kclgroup.backend.service.StockInfoService;
 import com.kclgroup.backend.service.UserService;
 import com.kclgroup.backend.mapper.UserMapper;
 import com.kclgroup.backend.util.Md5Util;
+import com.kclgroup.backend.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private FavorService favorService;
     @Override
     public User findByUserName(String username) {
-        User u = userMapper.findByUserName(username);
-        return u;
+        User user = userMapper.findByUserName(username);
+        return user;
     }
 
     @Override
@@ -45,8 +46,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void update(User user) {
-//        user.setUpdateTime(LocalDateTime.now());
-//        userMapper.update(user);
+        user.setUpdateTime(LocalDateTime.now());
+        userMapper.update(user);
     }
 
     @Override
@@ -58,9 +59,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void updatePwd(String newPwd) {
-//        Map<String,Object> map = ThreadLocalUtil.get();
-//        Integer id = (Integer) map.get("id");
-//        userMapper.updatePwd(Md5Util.getMD5String(newPwd),id);
+        Map<String,Object> map = ThreadLocalUtil.get();
+        Integer id = (Integer) map.get("id");
+        userMapper.updatePwd(Md5Util.getMD5String(newPwd),id);
     }
 
 

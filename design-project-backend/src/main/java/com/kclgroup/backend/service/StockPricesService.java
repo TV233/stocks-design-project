@@ -14,4 +14,12 @@ import java.util.List;
 public interface StockPricesService extends IService<StockPrices> {
 
     List<StockPriceVo> getStockPrices();
+
+    String getLatestPrice(String stockCode);
+
+    String getPriceChangeRate(String stockCode);
+
+    String getPriceChange(String stockCode);
+
+    String getRiseSpeed(String stockCode);
 }
