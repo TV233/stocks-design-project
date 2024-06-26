@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -87,15 +88,18 @@ public class UserController {
 
     @PutMapping("/update")
     public Result update(@RequestBody @Validated User user) {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Integer id = (Integer) map.get("id");
+        if(!Objects.equals(user.getId(), id))return Result.error("要修改的用户id错误");
         userService.update(user);
         return Result.success();
     }
 
-    @PatchMapping("updateAvatar")
-    public Result updateAvatar(@RequestParam @URL String avatarUrl) {
-        userService.updateAvatar(avatarUrl);
-        return Result.success();
-    }
+//    @PatchMapping("updateAvatar")
+//    public Result updateAvatar(@RequestParam @URL String avatarUrl) {
+//        userService.updateAvatar(avatarUrl);
+//        return Result.success();
+//    }
 
     @PatchMapping("/updatePwd")
     public Result updatePwd(@RequestBody Map<String, String> params,@RequestHeader("Authorization") String token) {

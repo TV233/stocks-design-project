@@ -50,12 +50,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userMapper.update(user);
     }
 
-    @Override
-    public void updateAvatar(String avatarUrl) {
-//        Map<String,Object> map = ThreadLocalUtil.get();
-//        Integer id = (Integer) map.get("id");
-//        userMapper.updateAvatar(avatarUrl,id);
-    }
+//    @Override
+//    public void updateAvatar(String avatarUrl) {
+////        Map<String,Object> map = ThreadLocalUtil.get();
+////        Integer id = (Integer) map.get("id");
+////        userMapper.updateAvatar(avatarUrl,id);
+//    }
 
     @Override
     public void updatePwd(String newPwd) {
