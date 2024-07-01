@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/user")
+//@RequestMapping("/user")
 @Validated
 public class UserController {
 
@@ -35,7 +35,7 @@ public class UserController {
 
 
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public Result register(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$") String password) {
 
         //查询用户
@@ -51,7 +51,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public Result<String> login(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$") String password) {
         //根据用户名查询用户
         User loginUser = userService.findByUserName(username);
@@ -75,7 +75,7 @@ public class UserController {
         return Result.error("密码错误");
     }
 
-    @GetMapping("/userInfo")
+    @GetMapping("/user/userInfo")
     public Result<User> userInfo(/*@RequestHeader(name = "Authorization") String token*/) {
         //根据用户名查询用户
        /* Map<String, Object> map = JwtUtil.parseToken(token);
@@ -86,7 +86,7 @@ public class UserController {
         return Result.success(user);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/user/update")
     public Result update(@RequestBody @Validated User user) {
         Map<String, Object> map = ThreadLocalUtil.get();
         Integer id = (Integer) map.get("id");
@@ -101,7 +101,7 @@ public class UserController {
 //        return Result.success();
 //    }
 
-    @PatchMapping("/updatePwd")
+    @PatchMapping("/user/updatePwd")
     public Result updatePwd(@RequestBody Map<String, String> params,@RequestHeader("Authorization") String token) {
         //1.校验参数
         String oldPwd = params.get("old_pwd");
