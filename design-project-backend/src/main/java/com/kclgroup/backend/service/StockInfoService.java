@@ -3,6 +3,8 @@ package com.kclgroup.backend.service;
 import com.kclgroup.backend.pojo.entity.StockInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author 张小明
 * @description 针对表【stock_info】的数据库操作Service
@@ -12,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface StockInfoService extends IService<StockInfo> {
 
     StockInfo getByStockCode(String stockCode);
+
+    List<StockInfo> getStockInfoByStockName(String stockName);
 }

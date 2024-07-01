@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/stock")
 @Validated
@@ -62,5 +64,12 @@ public class StockController {
     @GetMapping("/financial_data")
     public Result<FinancialDataVo> getFinancialData(@RequestParam String stockCode) {
         return Result.success(financialDataService.getFinancialDataByStockCode(stockCode));
+    }
+
+    //输入股票名，模糊搜索，返回可能的股票名和相应股票代码列表
+    @GetMapping("/find")
+    public Result<List<StockInfo>> findStock(@RequestParam String stockName) {
+        List<StockInfo> stockInfo = stockInfoService.getStockInfoByStockName(stockName);
+        return Result.success(stockInfo);
     }
 }

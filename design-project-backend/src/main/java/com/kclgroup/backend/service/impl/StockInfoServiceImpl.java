@@ -6,6 +6,8 @@ import com.kclgroup.backend.service.StockInfoService;
 import com.kclgroup.backend.mapper.StockInfoMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
 * @author 张小明
 * @description 针对表【stock_info】的数据库操作Service实现
@@ -20,6 +22,13 @@ public class StockInfoServiceImpl extends ServiceImpl<StockInfoMapper, StockInfo
         StockInfo stockInfo = baseMapper.getByStockCode(stockCode);
         return stockInfo;
     }
+
+    @Override
+    public List<StockInfo> getStockInfoByStockName(String stockName) {
+        List<StockInfo> stockInfoList = baseMapper.getStockInfoByStockName(stockName);
+        return stockInfoList;
+    }
+
 }
 
 
