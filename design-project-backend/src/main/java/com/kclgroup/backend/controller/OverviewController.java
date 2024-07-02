@@ -2,6 +2,7 @@ package com.kclgroup.backend.controller;
 
 import com.kclgroup.backend.pojo.entity.*;
 import com.kclgroup.backend.pojo.vo.PredictVo;
+import com.kclgroup.backend.pojo.vo.StockIndicesVo;
 import com.kclgroup.backend.pojo.vo.StockPriceVo;
 import com.kclgroup.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class OverviewController {
     private PredictService predictService;
     @Autowired
     private  StockPricesService stockPricesService;
+    @Autowired
+    private StockIndicesService stockIndicesService;
     @GetMapping
     public String overview() {
         return "overview";
@@ -64,5 +67,11 @@ public class OverviewController {
         return Result.success(stockPrices);
     }
 
+    //上证指数/深证成指/创业板指/沪深300各项数据
+    @GetMapping("/stock_indices")
+    public  Result<List<StockIndicesVo>> stockIndices() {
+        List<StockIndicesVo> stockIndices = stockIndicesService.getStockIndices();
+        return Result.success(stockIndices);
+    }
 
 }
