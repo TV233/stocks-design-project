@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'Soybean 管理系统',
+    title: '沙河分析师',
     updateTitle: '系统版本更新通知',
     updateContent: '检测到系统有新版本发布，是否立即刷新页面？',
     updateConfirm: '立即刷新',
@@ -57,7 +57,7 @@ const local: App.I18n.Schema = {
   },
   theme: {
     themeSchema: {
-      title: '主题模式',
+      title: '主题切换',
       light: '亮色模式',
       dark: '暗黑模式',
       auto: '跟随系统'
@@ -188,14 +188,14 @@ const local: App.I18n.Schema = {
       common: {
         loginOrRegister: '登录 / 注册',
         userNamePlaceholder: '请输入用户名',
-        phonePlaceholder: '请输入手机号',
+        phonePlaceholder: '请输入用户名',
         codePlaceholder: '请输入验证码',
         passwordPlaceholder: '请输入密码',
         confirmPasswordPlaceholder: '请再次输入密码',
         codeLogin: '验证码登录',
         confirm: '确定',
         back: '返回',
-        validateSuccess: '验证成功',
+        validateSuccess: '注册成功',
         loginSuccess: '登录成功',
         welcomeBack: '欢迎回来，{userName} ！'
       },

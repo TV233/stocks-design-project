@@ -68,7 +68,7 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'function_hide-child',
           i18nKey: 'route.function_hide-child',
           icon: 'material-symbols:filter-list-off',
-          order: 2
+          order: 11
         },
         redirect: '/function/hide-child/one',
         children: [
@@ -329,6 +329,17 @@ export const generatedRoutes: GeneratedRoute[] = [
         ]
       }
     ]
+  },
+  {
+    name: 'stock',
+    path: '/stock',
+    component: 'layout.base$view.stock',
+    meta: {
+      title: 'stock',
+      icon: 'ph:bag-simple-duotone',
+      i18nKey: '我的持仓',
+      order: 1
+    }
   },
   {
     name: 'user-center',

@@ -34,15 +34,13 @@
     "build": "vite build --mode prod",
     "build:test": "vite build --mode test",
     "cleanup": "sa cleanup",
-    "commit": "sa git-commit",
+    "commit": "git-commit",
     "dev": "vite --mode test",
     "dev:prod": "vite --mode prod",
     "gen-route": "sa gen-route",
     "lint": "eslint . --fix",
-    "prepare": "simple-git-hooks",
     "preview": "vite preview",
     "release": "sa release",
-    "typecheck": "vue-tsc --noEmit --skipLibCheck",
     "update-pkg": "sa update-pkg"
   },
   "dependencies": {
@@ -100,13 +98,6 @@
     "vite-plugin-vue-devtools": "7.3.2",
     "vue-eslint-parser": "9.4.3",
     "vue-tsc": "2.0.21"
-  },
-  "simple-git-hooks": {
-    "commit-msg": "pnpm sa git-commit-verify",
-    "pre-commit": "pnpm typecheck && pnpm lint-staged"
-  },
-  "lint-staged": {
-    "*": "eslint --fix"
   },
   "website": "https://antd.soybeanjs.cn"
 }

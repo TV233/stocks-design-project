@@ -55,13 +55,15 @@ const headerMenus = computed(() => {
     </div>
     <div class="h-full flex-y-center justify-end">
       <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
-      <LangSwitch :lang="appStore.locale" :lang-options="appStore.localeOptions" @change-lang="appStore.changeLocale" />
-      <ThemeSchemaSwitch
+      <!-- 不能切换语言 -->
+      <!-- <LangSwitch :lang="appStore.locale" :lang-options="appStore.localeOptions" @change-lang="appStore.changeLocale" /> -->
+      <!-- 不能切换主题 -->
+      <!--<ThemeSchemaSwitch
         :theme-schema="themeStore.themeScheme"
         :is-dark="themeStore.darkMode"
         @switch="themeStore.toggleThemeScheme"
       />
-      <ThemeButton />
+      <ThemeButton />-->
       <UserAvatar />
     </div>
   </DarkModeContainer>

@@ -3,7 +3,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
   themeScheme: 'light',
   grayscale: false,
   recommendColor: false,
-  themeColor: '#646cff',
+  themeColor: '#cf0f0f',
   otherColor: {
     info: '#2080f0',
     success: '#52c41a',
@@ -22,12 +22,12 @@ export const themeSettings: App.Theme.ThemeSetting = {
   header: {
     height: 56,
     breadcrumb: {
-      visible: true,
+      visible: false,
       showIcon: true
     }
   },
   tab: {
-    visible: true,
+    visible: false,
     cache: true,
     height: 44,
     mode: 'chrome'
@@ -42,7 +42,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
     mixChildMenuWidth: 200
   },
   footer: {
-    visible: true,
+    visible: false,
     fixed: false,
     height: 48,
     right: true

@@ -22,16 +22,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
   const userInfo: Api.Auth.UserInfo = reactive({
     userId: '',
-    userName: '',
-    roles: [],
-    buttons: []
-  });
-
-  /** is super role in static route */
-  const isStaticSuper = computed(() => {
-    const { VITE_AUTH_ROUTE_MODE, VITE_STATIC_SUPER_ROLE } = import.meta.env;
-
-    return VITE_AUTH_ROUTE_MODE === 'static' && userInfo.roles.includes(VITE_STATIC_SUPER_ROLE);
+    userName: ''
   });
 
   /** Is login */
@@ -131,14 +122,40 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     }
   }
 
+  /**
+   * Register
+   *
+   * @param userName User name
+   * @param password Password
+   * @param email Email
+   * @param [redirect=true] Whether to redirect after registration. Default is `true`
+   */
+  async function register(userName: string, password: string, redirect = true) {
+    startLoading();
+
+    const { data, error } = await fetchRegister(userName, password);
+
+    if (!error) {
+      if (redirect) {
+        await toLogin();
+      }
+
+
+    } else {
+      const a = 1
+    }
+
+    endLoading();
+  }
+
   return {
     token,
     userInfo,
-    isStaticSuper,
     isLogin,
     loginLoading,
     resetStore,
     login,
-    initUserInfo
+    initUserInfo,
+    register
   };
 });
