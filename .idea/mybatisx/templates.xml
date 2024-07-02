@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="StockIndices" />
-                  <option name="tableName" value="stock_indices" />
+                  <option name="className" value="IndexKlines" />
+                  <option name="tableName" value="index_klines" />
                 </TableUIInfo>
               </list>
             </option>

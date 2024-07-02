@@ -1,6 +1,7 @@
 package com.kclgroup.backend.controller;
 
 import com.kclgroup.backend.pojo.entity.*;
+import com.kclgroup.backend.pojo.vo.IndexKlineVo;
 import com.kclgroup.backend.pojo.vo.PredictVo;
 import com.kclgroup.backend.pojo.vo.StockIndicesVo;
 import com.kclgroup.backend.pojo.vo.StockPriceVo;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,6 +33,9 @@ public class OverviewController {
     private  StockPricesService stockPricesService;
     @Autowired
     private StockIndicesService stockIndicesService;
+    @Autowired
+    private IndexKlinesService indexKlinesService;
+
     @GetMapping
     public String overview() {
         return "overview";
@@ -72,6 +77,13 @@ public class OverviewController {
     public  Result<List<StockIndicesVo>> stockIndices() {
         List<StockIndicesVo> stockIndices = stockIndicesService.getStockIndices();
         return Result.success(stockIndices);
+    }
+
+    //输入指数代码，返回指数数据
+    @GetMapping("/index_klines")
+    public Result<List<IndexKlineVo>> indexKlines(@RequestParam String indexCode) {
+        List<IndexKlineVo> indexKlines = indexKlinesService.getIndexKlines(indexCode);
+        return Result.success(indexKlines);
     }
 
 }
