@@ -141,31 +141,62 @@ function getGradientColor(color: CardData['color']) {
     </DefineGradientBg>
     <!-- define component end: GradientBg -->
 
-    <ADescriptions title="A股 开盘中" class="font-sans"></ADescriptions>
 
+    <ARow class="font-sans font-bold text-4 mb-1"><icon-fxemoji:stockchart class='mr-1 mt-1' />  A股 开盘中</ARow>
     <ARow :gutter="[16, 16]" class="flex-nowrap overflow-auto pb-2">
       <ACol v-for="item in cardData" :key="item.id" :span="24" :sm="6" :lg="3">
         <GradientBg :gradient-color="getGradientColor(item.color)" class="flex-1">
           <h3 class="w-full flex justify-center text-16px text-dark font-600">{{ item.title }}</h3>
           <div class="mt--2 flex justify-center">
-            <CountTo :prefix="item.unit" :start-value="1" :end-value="item.value"
-              class="text-6 text-[upcolor.value] dark:text-white" :class="up ? 'text-[#fe2435]' : 'text-[#08aa4b]'" />
+            <CountTo
+              :prefix="item.unit"
+              :start-value="1"
+              :end-value="item.value"
+              class="text-6 text-[upcolor.value] dark:text-white"
+              :class="up ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+            />
           </div>
           <div class="mt--2 flex justify-between">
-            <CountTo :prefix="up ? '+' : '-'" :start-value="1" :end-value="item.change" class="text-3 dark:text-white"
-              :class="up ? 'text-[#fe2435]' : 'text-[#08aa4b]'" />
-            <CountTo suffix="%" :start-value="1" :end-value="item.rate" class="text-3 dark:text-white"
-              :class="up ? 'text-[#fe2435]' : 'text-[#08aa4b]'" />
+            <CountTo
+              :prefix="up ? '+' : '-'"
+              :start-value="1"
+              :end-value="item.change"
+              class="text-3 dark:text-white"
+              :class="up ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+            />
+            <CountTo
+              suffix="%"
+              :start-value="1"
+              :end-value="item.rate"
+              class="text-3 dark:text-white"
+              :class="up ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+            />
           </div>
         </GradientBg>
       </ACol>
     </ARow>
     <ProgressBar :decrease="2345" :increase="345" />
-    <div class="mb--5 mt-2 font-sans h-12 text-4 font-bold">今日实时成交额
-      <CountTo suffix="亿" :start-value="1" :end-value="默认值" class="text-4 dark:text-white"
-         />
+    <div class="mb--5 mt-2 h-12 text-4 font-bold font-sans">
+      今日实时成交额
+      <CountTo suffix="亿" :start-value="1" :end-value="默认值" class="text-4 dark:text-white" />
     </div>
   </ACard>
 </template>
 
-<style scoped></style>
+<style scoped>/* 美化滚动条 */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}</style>

@@ -3,9 +3,10 @@ import HeaderBanner from './modules/header-banner.vue';
 import CardData from './modules/card-data.vue';
 
 import PieChart from './modules/pie-chart.vue';
-import ProjectNews from './modules/project-news.vue';
-import CreativityBanner from './modules/creativity-banner.vue';
+
 import HotTopic from './modules/hot-topic.vue'
+import MarketBlock from './modules/market-block.vue'
+import BestRank from './modules/best-rank.vue'
 </script>
 
 <template>
@@ -16,19 +17,12 @@ import HotTopic from './modules/hot-topic.vue'
       <ACol :span="24" :lg="14">
 
         <HotTopic />
-      </ACol>
+        <MarketBlock/>   </ACol>
       <ACol :span="24" :lg="10">
-        <PieChart />
+        <BestRank />
       </ACol>
     </ARow>
-    <ARow :gutter="[16, 16]">
-      <ACol :span="24" :lg="14">
-        <ProjectNews />
-      </ACol>
-      <ACol :span="24" :lg="10">
-        <CreativityBanner />
-      </ACol>
-    </ARow>
+
   </ASpace>
 </template>
 

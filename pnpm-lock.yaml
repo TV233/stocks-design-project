@@ -56,6 +56,9 @@ importers:
       pinia:
         specifier: 2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@3.4.29(typescript@5.4.5))
+      simplebar-vue:
+        specifier: 2.3.5
+        version: 2.3.5(vue@3.4.29(typescript@5.4.5))
       tailwind-merge:
         specifier: 2.3.0
         version: 2.3.0

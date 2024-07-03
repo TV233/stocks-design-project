@@ -30,7 +30,7 @@ function toggle() {
 
 <template>
   <div>
-    <div class="mt-2 flex justify-between text-5">
+    <div class="mt-2 flex justify-between text-5 mb--2">
       <span class="text-[#fe2435]">
         涨
         <CountTo :start-value="1" :end-value="props.increase" class="ml--1.5" />

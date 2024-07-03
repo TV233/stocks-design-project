@@ -34,13 +34,14 @@
     "build": "vite build --mode prod",
     "build:test": "vite build --mode test",
     "cleanup": "sa cleanup",
-    "commit": "git-commit",
+    "commit": "sa git-commit",
     "dev": "vite --mode test",
     "dev:prod": "vite --mode prod",
     "gen-route": "sa gen-route",
     "lint": "eslint . --fix",
     "preview": "vite preview",
     "release": "sa release",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck",
     "update-pkg": "sa update-pkg"
   },
   "dependencies": {
@@ -60,6 +61,7 @@
     "lodash-es": "4.17.21",
     "nprogress": "0.2.0",
     "pinia": "2.1.7",
+    "simplebar-vue": "2.3.5",
     "tailwind-merge": "2.3.0",
     "vue": "3.4.29",
     "vue-draggable-plus": "0.5.0",
