@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { CarouselProps } from 'ant-design-vue';
+import { useRouterPush } from '@/hooks/common/router';
+const { routerPushByKey } = useRouterPush();
 defineOptions({
   name: 'HotTopic'
 });
@@ -39,20 +41,29 @@ const dotPosition = ref<CarouselProps['dotPosition']>('right');
       <div v-for="item in hotTopic" :key="item.sector">
         <ACard :bordered="false" class="mb--5 mt--6 h-100%">
           <div class="flex justify-between">
-            <div class="text-5 font-bold"><icon-emojione:fire  /> 热门话题: {{ item.sector }}</div>
+            <div class="text-5 font-bold">
+              <icon-emojione:fire />
+              热门话题: {{ item.sector }}
+            </div>
             <div class="w-34 border-2 border-[#fe2435] text-center align-middle text-4 font-bold">
               {{ item.stockName }} {{ item.stockCode }}
             </div>
           </div>
           <div class="flex justify-between">
             <div class="mt-2 text-4">{{ item.reason }}</div>
-            <AButton shape="circle" class="mt-2">
-              <icon-material-symbols:arrow-forward-ios class="h-6 w-6 text-40" />
-            </AButton>
+            <ATooltip placement="left">
+              <template #title>查看详情</template>
+              <AButton
+                shape="circle"
+                class="mt-2"
+                @click="routerPushByKey('detail', { query: { stockCode: item.stockCode } })"
+              >
+                <icon-material-symbols:arrow-forward-ios class="h-6 w-6 text-40" />
+              </AButton>
+            </ATooltip>
           </div>
         </ACard>
       </div>
-
     </ACarousel>
   </ACard>
 </template>

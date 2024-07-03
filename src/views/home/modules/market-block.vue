@@ -38,6 +38,10 @@ const blockData = computed<any>(() => [
 
 <template>
   <ACard class="mt-3 flex p-x-2 p-y-1">
+    <div class="text-5 font-bold w-full mb-2">
+      <icon-svg-spinners:blocks-shuffle-3 />
+   热门板块
+    </div>
     <ACardGrid
       v-for="item in blockData"
       :key="item.name"

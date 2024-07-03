@@ -10,8 +10,8 @@ import BestRank from './modules/best-rank.vue'
 </script>
 
 <template>
-  <ASpace direction="vertical" :size="16">
-    <!-- <HeaderBanner /> -->
+   <ASpace direction="vertical" :size="16">
+    <HeaderBanner />
     <CardData />
     <ARow :gutter="[16, 16]">
       <ACol :span="24" :lg="14">
@@ -24,6 +24,7 @@ import BestRank from './modules/best-rank.vue'
     </ARow>
 
   </ASpace>
+
 </template>
 
 <style scoped></style>

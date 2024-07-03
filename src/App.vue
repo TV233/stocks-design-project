@@ -20,7 +20,7 @@ const antdLocale = computed(() => {
 
 <template>
 
-  <ConfigProvider :theme="themeStore.antdTheme" :locale="antdLocale" id='app'>
+  <ConfigProvider :theme="themeStore.antdTheme" :locale="antdLocale">
     <AppProvider>
       <RouterView class="bg-layout !font-sans" />
     </AppProvider>
