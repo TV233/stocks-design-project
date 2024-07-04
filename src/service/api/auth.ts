@@ -1,26 +1,38 @@
+import axios from 'axios';
 import { request } from '../request';
 
 /**
  * Login
  *
- * @param userName User name
+ * @param username User name
  * @param password Password
  */
-export function fetchLogin(userName: string, password: string) {
-  return request<Api.Auth.LoginToken>({
-    url: '/auth/login',
+export function fetchLogin(username: string, password: string) {
+  const data = new URLSearchParams();
+  data.append('username', username);
+  data.append('password', password);
+
+  return axios({
     method: 'post',
-    data: {
-      userName,
-      password
+    url: '/auth/login',
+    baseURL: 'http://localhost:8080',
+    data: data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   });
 }
 
 /** Get user info */
 export function fetchGetUserInfo() {
-  return request<Api.Auth.UserInfo>({ url: '/auth/getUserInfo' });
+  return request<Api.Auth.UserInfo>({
+    url: '/user/getUserInfo',
+    headers: {
+      Authorization: `${localStorage.getItem('jwtToken')}` // Assuming the token is stored in localStorage
+    }
+  });
 }
+
 
 /**
  * Refresh token
