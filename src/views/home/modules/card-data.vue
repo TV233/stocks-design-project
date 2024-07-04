@@ -184,10 +184,10 @@ function getGradientColor(color: { start: string; end: string }) {
     </Simplebar>
 
     <ProgressBar :decrease="upDowns.negativeChange" :increase="upDowns.positiveChange" />
-    <div class="mb--5 mt-2 h-12 text-4 font-bold font-sans">
+    <!-- <div class="mb--5 mt-2 h-12 text-4 font-bold font-sans">
       今日实时成交额
       <CountTo suffix="亿" :start-value="1" :end-value="5804" class="text-4 dark:text-white" />
-    </div>
+    </div> -->
   </ACard>
 </template>
 
