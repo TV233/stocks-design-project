@@ -13,7 +13,8 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '403',
       i18nKey: 'route.403',
-      constant: true
+      constant: true,
+      hideInMenu: true
     }
   },
   {
@@ -23,7 +24,8 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '404',
       i18nKey: 'route.404',
-      constant: true
+      constant: true,
+      hideInMenu: true
     }
   },
   {
@@ -33,7 +35,8 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: '500',
       i18nKey: 'route.500',
-      constant: true
+      constant: true,
+      hideInMenu: true
     }
   },
   {
@@ -42,7 +45,8 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base$view.about',
     meta: {
       title: 'about',
-      i18nKey: 'route.about'
+      i18nKey: 'route.about',
+      hideInMenu: true
     }
   },
   {
@@ -51,7 +55,8 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base$view.detail',
     meta: {
       title: 'detail',
-      i18nKey: 'route.detail'
+      i18nKey: 'route.detail',
+      hideInMenu: true
     }
   },
   {
@@ -60,6 +65,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'function',
+      hideInMenu: true,
       i18nKey: 'route.function'
     },
     children: [
@@ -106,6 +112,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.function_multi-tab',
         meta: {
           title: 'function_multi-tab',
+          hideInMenu: true,
           i18nKey: 'route.function_multi-tab'
         }
       },
@@ -162,6 +169,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base$view.iframe-page',
     props: true,
     meta: {
+      hideInMenu: true,
       title: 'iframe-page',
       i18nKey: 'route.iframe-page'
     }
@@ -172,6 +180,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base$view.login',
     props: true,
     meta: {
+      hideInMenu: true,
       title: 'login',
       i18nKey: 'route.login',
       constant: true
@@ -182,6 +191,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     path: '/manage',
     component: 'layout.base',
     meta: {
+      hideInMenu: true,
       title: 'manage',
       i18nKey: 'route.manage'
     },
@@ -229,6 +239,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     path: '/multi-menu',
     component: 'layout.base',
     meta: {
+      hideInMenu: true,
       title: 'multi-menu',
       i18nKey: 'route.multi-menu'
     },

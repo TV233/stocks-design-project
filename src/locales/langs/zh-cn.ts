@@ -156,6 +156,7 @@ const local: App.I18n.Schema = {
     document_naive: 'Naive UI文档',
     document_antd: 'Ant Design Vue文档',
     'user-center': '个人中心',
+    stock: '自选股',
     about: '关于',
     function: '系统功能',
     function_tab: '标签页',
@@ -197,7 +198,7 @@ const local: App.I18n.Schema = {
         back: '返回',
         validateSuccess: '注册成功',
         loginSuccess: '登录成功',
-        welcomeBack: '欢迎回来，{userName} ！'
+        welcomeBack: '欢迎回来，{username} ！'
       },
       pwdLogin: {
         title: '密码登录',
