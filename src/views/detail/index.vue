@@ -6,16 +6,7 @@ import { request } from '@/service/request';
 // import { fetchStockDataAndPrediction, fetchStockFinancialData } from '@/service/api/stock-detail';
 
 const stockInfoData = ref([]);
-
-// // 获取股票年报数据
-// fetchStockFinancialData('000821').then(response => {
-//   console.log(response.data);
-// });
-
-// // 获取股票实时涨跌数据和预测数据
-// fetchStockDataAndPrediction('000821').then(response => {
-//   console.log(response.data);
-// });
+const stockDetailData = ref([]);
 
 const route = useRoute();
 const router = useRouter();
@@ -37,8 +28,30 @@ async function fetchStockFinancialData(stockCode) {
       method: 'GET'
     });
     if (result) {
-      console.log(result.data);
+      // console.log(result.data);
       stockInfoData.value = result.data; // 存储获取到的股票指数数据
+    } else {
+      // console.error('Error fetching stock indices:', result.message);
+    }
+  } catch (error) {
+    // console.error('Error fetching stock indices:', error);
+  }
+}
+async function fetchstockDetailData(stockCode) {
+  try {
+    const result = await request({
+      url: '/stock',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      params: {
+        stockCode
+      },
+      method: 'GET'
+    });
+    if (result) {
+      console.log(result.data);
+      stockDetailData.value = result.data; // 存储获取到的股票指数数据
     } else {
       // console.error('Error fetching stock indices:', result.message);
     }
@@ -114,6 +127,12 @@ stockDetail.value = {
   priceChange: Math.round(Number.parseFloat(stockDetail.value.priceChange) * 100) / 100,
   riseSpeed: Math.round(Number.parseFloat(stockDetail.value.riseSpeed) * 100) / 100
 };
+stockDetailData.value = {
+  ...stockDetailData.value,
+  latestPrice: Math.round(Number.parseFloat(stockDetailData.value.latestPrice) * 100) / 100,
+  priceChangeRate: Math.round(Number.parseFloat(stockDetailData.value.priceChangeRate) * 100) / 100,
+  priceChange: Math.round(Number.parseFloat(stockDetailData.value.priceChange) * 100) / 100
+};
 
 const goBack = () => {
   router.back();
@@ -157,6 +176,7 @@ onMounted(() => {
     chartInstance = echarts.init(chartRef.value);
     chartInstance.setOption(pieChartConfig);
     fetchStockFinancialData(stockCode);
+    fetchstockDetailData(stockCode);
   }
 });
 
@@ -219,6 +239,108 @@ const barChartConfig = {
     }
   ]
 };
+
+// 监听 stockDetailData 的变化，并更新图表
+watch(stockDetailData, () => {
+  updatePieChart();
+  updateBarChart();
+});
+
+// 更新饼状图的方法
+function updatePieChart() {
+  const pieChartConfig2 = {
+    backgroundColor: 'transparent',
+    series: [
+      {
+        type: 'pie',
+        radius: '40%',
+        data: [
+          { value: stockDetailData.value.ratingBuyNum, name: '买进指数', itemStyle: { color: '#d62728' } },
+          { value: stockDetailData.value.ratingAddNum, name: '增持指数', itemStyle: { color: '#ff7f0e' } },
+          { value: stockDetailData.value.ratingNeutralNum, name: '观望指数', itemStyle: { color: '#2ca02c' } },
+          { value: stockDetailData.value.ratingReduceNum, name: '减持指数', itemStyle: { color: '#9467bd' } },
+          { value: stockDetailData.value.ratingSaleNum, name: '卖出指数', itemStyle: { color: '#1f77b4' } }
+        ].filter(item => item.value > 0),
+        label: {
+          fontSize: 10,
+          formatter: params => `${params.name}: ${params.value}`
+        },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        }
+      }
+    ]
+  };
+  chartInstance.setOption(pieChartConfig2, true);
+}
+
+// 更新条形图的方法
+function updateBarChart() {
+  const barChartConfig2 = {
+    backgroundColor: 'transparent',
+    title: {
+      text: '股票收益预测',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    xAxis: {
+      type: 'category',
+      data: [
+        stockDetailData.value.year1,
+        stockDetailData.value.year2,
+        stockDetailData.value.year3,
+        stockDetailData.value.year4
+      ],
+      name: ' ',
+      nameLocation: 'middle',
+      nameGap: 25
+    },
+    yAxis: {
+      type: 'value',
+      name: '每股收益 (EPS)',
+      nameLocation: 'middle',
+      nameGap: 40
+    },
+    series: [
+      {
+        data: [
+          stockDetailData.value.eps1,
+          stockDetailData.value.eps2,
+          stockDetailData.value.eps3,
+          stockDetailData.value.eps4
+        ],
+        type: 'bar',
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: '#ff7f0e' },
+            { offset: 0.5, color: '#ff5722' },
+            { offset: 1, color: '#e64a19' }
+          ])
+        },
+        emphasis: {
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#ff5722' },
+              { offset: 0.7, color: '#e64a19' },
+              { offset: 1, color: '#d84315' }
+            ])
+          }
+        },
+        animationDelay: idx => idx * 200
+      }
+    ]
+  };
+  barChartInstance.setOption(barChartConfig2, true);
+}
 
 onMounted(() => {
   if (chartRef.value) {
@@ -420,6 +542,42 @@ onUnmounted(() => {
     lineChartInstance.dispose();
   }
 });
+
+const computedLatestPrice = computed(() => {
+  const price = Number.parseFloat(stockDetailData.value.latestPrice);
+  return isNaN(price) ? 0 : price; // 如果是NaN，则默认为0
+});
+
+const computedPriceChange = computed(() => {
+  const change = Number.parseFloat(stockDetailData.value.priceChange);
+  return isNaN(change) ? 0 : change;
+});
+
+const computedPriceChangeRate = computed(() => {
+  const rate = Number.parseFloat(stockDetailData.value.priceChangeRate);
+  return isNaN(rate) ? 0 : rate;
+});
+const onAdd = async code => {
+  try {
+    const response = await request({
+      url: '/favor',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: {
+        stockCode: code
+      }
+    });
+    if (response) {
+      alert('添加成功');
+    } else {
+      alert('添加失败');
+    }
+  } catch (error) {
+    alertr('添加失败');
+  }
+};
 </script>
 
 <template>
@@ -432,43 +590,43 @@ onUnmounted(() => {
       <ACard :bordered="false" class="mt-2 w-35% card-wrapper">
         <div class="flex justify-between">
           <div>
-            <div class="mb--1 text-5 font-bold">{{ stockDetail.stockName }}</div>
-            <div class="flex-x-center text-4">{{ stockDetail.stockCode }}</div>
-            <div class="flex-x-center text-4">{{ stockDetail.industry }}</div>
+            <div class="mb--1 text-5 font-bold">{{ stockDetailData.stockName }}</div>
+            <div class="text-4">{{ stockDetailData.stockCode }}</div>
+            <div class="flex-x-center text-4">{{ stockInfoData.summary }}</div>
           </div>
           <div>
             <div>
               <CountTo
                 suffix=""
                 :start-value="1"
-                :end-value="stockDetail.latestPrice"
+                :end-value="computedLatestPrice"
                 :decimals="2"
                 class="text-6 font-sans"
-                :class="stockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+                :class="computedPriceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
               />
             </div>
             <div class="mt--2 flex justify-between">
               <CountTo
                 suffix=""
                 :start-value="1"
-                :end-value="stockDetail.priceChange"
+                :end-value="computedPriceChange"
                 :decimals="2"
                 class="text-3 font-sans"
-                :class="stockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+                :class="computedPriceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
               />
               <CountTo
                 suffix="%"
                 :start-value="1"
-                :end-value="stockDetail.priceChangeRate"
+                :end-value="computedPriceChangeRate"
                 :decimals="2"
                 class="ml-1.5 text-3 font-sans"
-                :class="stockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+                :class="computedPriceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
               />
             </div>
           </div>
           <ATooltip placement="topRight">
             <template #title>加入自选</template>
-            <AButton class="mt-2" type="primary" shape="circle" size="large">
+            <AButton class="mt-2" type="primary" shape="circle" size="large" @click="() => onAdd(stockCode)">
               <icon-material-symbols-light:add-rounded class="mt--2.5 h-12 w-10" />
             </AButton>
           </ATooltip>
