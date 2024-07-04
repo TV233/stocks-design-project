@@ -1,10 +1,10 @@
 <!-- eslint-disable no-invalid-this -->
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import type { PropType } from 'vue';
+import { computed, defineProps, onMounted, ref } from 'vue';
 import { createReusableTemplate } from '@vueuse/core';
 import { request } from '@/service/request';
 import ProgressBar from './progress-bar.vue';
-
 
 defineOptions({
   name: 'CardData'
@@ -19,13 +19,33 @@ async function fetchStockIndices() {
     });
     // Assuming 'result' directly contains the 'emotionIndex' after response transformation
     if (result) {
-      console.log(result);
+      // console.log(result);
       stockIndices.value = result.data;
     } else {
       console.error('No data returned for emotion index');
     }
   } catch (error) {
     console.error('Error fetching emotion index:', error);
+    // showErrorMsg(error.message); // Utilize the shared error handling function if necessary
+  }
+}
+const upDowns = ref([]);
+async function fetchUpDown() {
+  try {
+    // Using the custom request function to fetch the emotion index
+    const result = await request({
+      url: '/api/upDown',
+      method: 'GET'
+    });
+    // Assuming 'result' directly contains the 'emotionIndex' after response transformation
+    if (result) {
+      console.log('bbb', result);
+      upDowns.value = result.data;
+    } else {
+      // console.error('No data returned for emotion index');
+    }
+  } catch (error) {
+    // console.error('Error fetching emotion index:', error);
     // showErrorMsg(error.message); // Utilize the shared error handling function if necessary
   }
 }
@@ -38,7 +58,7 @@ const cardData = computed(() => {
     value: index.indexValue,
     rate: index.changePercent,
     change: index.changeAmount,
-    color: (item) => ({
+    color: item => ({
       start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
       end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
     })
@@ -95,7 +115,8 @@ const cardData = computed(() => {
 //   }
 // ]);
 onMounted(() => {
-  fetchStockIndices();  // 在组件挂载时获取股票指数数据
+  fetchStockIndices(); // 在组件挂载时获取股票指数数据
+  fetchUpDown();
 });
 
 interface GradientBgProps {
@@ -162,7 +183,7 @@ function getGradientColor(color: { start: string; end: string }) {
       </ARow>
     </Simplebar>
 
-    <ProgressBar :decrease="2345" :increase="345" />
+    <ProgressBar :decrease="upDowns.negativeChange" :increase="upDowns.positiveChange" />
     <div class="mb--5 mt-2 h-12 text-4 font-bold font-sans">
       今日实时成交额
       <CountTo suffix="亿" :start-value="1" :end-value="5804" class="text-4 dark:text-white" />

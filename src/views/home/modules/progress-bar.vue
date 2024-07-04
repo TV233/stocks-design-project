@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useTransition } from '@vueuse/core';
 
 const duration = 6500;
@@ -13,14 +13,24 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const upNumber = ref(0);
 const downNumber = ref(0);
-const cubicBezierNumber = useTransition(upNumber, {
-  duration,
-  transition: [0.75, 0, 0.25, 1]
-});
-const cubicBezierNumber2 = useTransition(downNumber, {
-  duration,
-  transition: [0.75, 0, 0.25, 1]
-});
+const total = computed(() => props.increase + props.decrease);
+
+const cubicBezierNumber = useTransition(
+  computed(() => (props.increase / total.value) * 100),
+  {
+    duration,
+    transition: [0.75, 0, 0.25, 1]
+  }
+);
+
+const cubicBezierNumber2 = useTransition(
+  computed(() => (props.decrease / total.value) * 100),
+  {
+    duration,
+    transition: [0.75, 0, 0.25, 1]
+  }
+);
+
 onMounted(() => toggle());
 function toggle() {
   upNumber.value = props.increase;
@@ -30,7 +40,7 @@ function toggle() {
 
 <template>
   <div>
-    <div class="mt-2 flex justify-between text-5 mb--2">
+    <div class="mb--2 mt-2 flex justify-between text-5">
       <span class="text-[#fe2435]">
         涨
         <CountTo :start-value="1" :end-value="props.increase" class="ml--1.5" />
