@@ -1,7 +1,29 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed ,onMounted,ref } from 'vue';
+import { request } from '@/service/request';
 
 defineOptions({ name: 'MarketBlock' });
+const marketData = ref([]);
+// 从后端获取市场风向数据
+async function fetchMarketStyle() {
+  try {
+    const result = await request({
+      url: '/api/market_style',
+      method: 'GET'
+    });
+    if (result) {
+      marketData.value = result.data;  // 存储获取到的股票指数数据
+    } else {
+      // console.error('Error fetching stock indices:', result.message);
+    }
+  } catch (error) {
+    // console.error('Error fetching stock indices:', error);
+  }
+}
+
+onMounted(() => {
+  fetchMarketStyle(); // 组件挂载时调用函数获取数据
+});
 const blockData = computed<any>(() => [
   { name: '水泥', changeRate: 1.81, topName: '供给侧改革' },
   { name: '钢铁', changeRate: 2.11, topName: '供给侧改革' },
@@ -40,29 +62,31 @@ const blockData = computed<any>(() => [
   <ACard class="mt-3 flex p-x-2 p-y-1">
     <div class="text-5 font-bold w-full mb-2">
       <icon-svg-spinners:blocks-shuffle-3 />
-   热门板块
+      市场风向
     </div>
     <ACardGrid
-      v-for="item in blockData"
+      v-for="item in marketData"
       :key="item.name"
       style="width: 23.5%; text-align: center; border: 2px solid #fae7e7"
-      class="m-1  !rounded-md h-17 cursor-pointer"
+      class="m-1 !rounded-md h-17 cursor-pointer"
     >
       <div class="mt--5">
-        <div class=" overflow-hidden text-ellipsis whitespace-nowrap text-3.5 font-bold">
+        <div class="overflow-hidden text-ellipsis whitespace-nowrap text-3.5 font-bold">
           {{ item.name }}
         </div>
+        <!-- 使用computed style动态切换涨跌颜色 -->
         <CountTo
           suffix="%"
           :decimals="2"
           :start-value="0"
           :end-value="item.changeRate"
-          class="text-3.5 text-[#fe2435] font-bold"
+          :class="`text-3.5 font-bold ${item.changeRate >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'}`"
         />
         <div class="text-3 mt--1">{{ item.topName }}</div>
       </div>
     </ACardGrid>
   </ACard>
 </template>
+
 
 <style scoped></style>

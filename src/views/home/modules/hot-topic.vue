@@ -1,11 +1,29 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref,onMounted } from 'vue';
 import type { CarouselProps } from 'ant-design-vue';
 import { useRouterPush } from '@/hooks/common/router';
+import { request } from '@/service/request';
 const { routerPushByKey } = useRouterPush();
 defineOptions({
   name: 'HotTopic'
 });
+const hotTopicData = ref([]);
+async function fetchHotTopic() {
+  try {
+    const result = await request({
+      url: '/api/sectors',
+      method: 'GET'
+    });
+    if (result) {
+      hotTopicData.value = result.data;  // 存储获取到的股票指数数据
+    } else {
+      console.error('Error fetching stock indices:', result.message);
+    }
+  } catch (error) {
+    console.error('Error fetching stock indices:', error);
+  }
+}
+
 const hotTopic = computed<any>(() => [
   {
     sector: 'Sora概念(文生视频)',
@@ -33,12 +51,15 @@ const hotTopic = computed<any>(() => [
   }
 ]);
 const dotPosition = ref<CarouselProps['dotPosition']>('right');
+  onMounted(() => {
+    fetchHotTopic(); 
+});
 </script>
 
 <template>
   <ACard :bordered="false" class="h-28 w-100% card-wrapper">
     <ACarousel :dot-position="dotPosition" autoplay :dots="false" class="h-10%">
-      <div v-for="item in hotTopic" :key="item.sector">
+      <div v-for="item in hotTopicData" :key="item.sector">
         <ACard :bordered="false" class="mb--5 mt--6 h-100%">
           <div class="flex justify-between">
             <div class="text-5 font-bold">
