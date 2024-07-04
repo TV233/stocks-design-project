@@ -100,13 +100,22 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   async function getUserInfo() {
     const { data: info, error } = await fetchGetUserInfo();
 
+    // if (!error) {
+    //   // update store
+    //   Object.assign(userInfo, info);
+
+    //   return true;
+    // }
     if (!error) {
-      // update store
+      // 确保userInfo中有roles属性，并且其为数组
+      if (!info.roles) {
+        info.roles = [];  // 如果API没有返回roles，初始化为空数组
+      }
+      // 更新store中的userInfo
       Object.assign(userInfo, info);
 
       return true;
     }
-
     return false;
   }
 
