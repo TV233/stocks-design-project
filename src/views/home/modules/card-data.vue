@@ -143,7 +143,7 @@ function getGradientColor(color: { start: string; end: string }) {
 
     <ARow class="mb-1 text-4 font-bold font-sans">
       <icon-fxemoji:stockchart class="mr-1 mt-1" />
-      A股 开盘中
+      股票指数概览
     </ARow>
     <Simplebar>
       <ARow :gutter="[16, 16]" class="flex-nowrap pb-4">

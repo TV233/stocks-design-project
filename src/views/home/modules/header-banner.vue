@@ -182,7 +182,6 @@ const option = {
   ]
 };
 
-
 onMounted(() => {
   if (chartRef.value) {
     chartInstance = echarts.init(chartRef.value);
@@ -208,6 +207,7 @@ onUnmounted(() => {
     <ARow :gutter="[16, 16]">
       <ACol :span="12" :md="10">
         <div class="ml-7 mr--22 mt-2 text-5 font-sans">{{ marketInfo.content }}</div>
+        <div class="ml-7 mr--22 mt-2 text-4 font-sans">建议仓位：{{ marketInfo.positionIndex }}%</div>
       </ACol>
       <ACol :span="24" :md="6">
         <div ref="chartRef" class="chart-container mt--25"></div>
