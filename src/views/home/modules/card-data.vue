@@ -1,63 +1,102 @@
 <!-- eslint-disable no-invalid-this -->
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { createReusableTemplate } from '@vueuse/core';
+import { request } from '@/service/request';
 import ProgressBar from './progress-bar.vue';
+
 
 defineOptions({
   name: 'CardData'
 });
-
-const cardData = computed<any>(() => [
-  {
-    key: 9,
-    symbol: '000001',
-    title: '上证指数',
-    value: 2994.73,
-    rate: 0.92,
-    change: 27.33,
-    color: (item: any) => ({
-      start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
-      end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
-    })
-  },
-  {
-    key: 10,
-    symbol: '399001',
-    title: '深证成指',
-    value: 8899.17,
-    rate: 0.57,
-    change: 50.47,
-    color: (item: any) => ({
-      start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
-      end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
-    })
-  },
-  {
-    key: 11,
-    symbol: '399006',
-    title: '创业板指',
-    value: 1682.69,
-    rate: -0.04,
-    change: -0.74,
-    color: (item: any) => ({
-      start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
-      end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
-    })
-  },
-  {
-    key: 12,
-    symbol: '000300',
-    title: '沪深300',
-    value: 3478.18,
-    rate: 0.48,
-    change: 16.52,
-    color: (item: any) => ({
-      start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
-      end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
-    })
+const stockIndices = ref([]);
+async function fetchStockIndices() {
+  try {
+    // Using the custom request function to fetch the emotion index
+    const result = await request({
+      url: '/api/stock_indices',
+      method: 'GET'
+    });
+    // Assuming 'result' directly contains the 'emotionIndex' after response transformation
+    if (result) {
+      console.log(result);
+      stockIndices.value = result.data;
+    } else {
+      console.error('No data returned for emotion index');
+    }
+  } catch (error) {
+    console.error('Error fetching emotion index:', error);
+    // showErrorMsg(error.message); // Utilize the shared error handling function if necessary
   }
-]);
+}
+
+const cardData = computed(() => {
+  return stockIndices.value.map(index => ({
+    key: index.id,
+    symbol: index.symbol,
+    title: index.name,
+    value: index.indexValue,
+    rate: index.changePercent,
+    change: index.changeAmount,
+    color: (item) => ({
+      start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
+      end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
+    })
+  }));
+});
+// const cardData = computed<any>(() => [
+//   {
+//     key: 9,
+//     symbol: '000001',
+//     title: '上证指数',
+//     value: 2994.73,
+//     rate: 0.92,
+//     change: 27.33,
+//     color: (item: any) => ({
+//       start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
+//       end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
+//     })
+//   },
+//   {
+//     key: 10,
+//     symbol: '399001',
+//     title: '深证成指',
+//     value: 8899.17,
+//     rate: 0.57,
+//     change: 50.47,
+//     color: (item: any) => ({
+//       start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
+//       end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
+//     })
+//   },
+//   {
+//     key: 11,
+//     symbol: '399006',
+//     title: '创业板指',
+//     value: 1682.69,
+//     rate: -0.04,
+//     change: -0.74,
+//     color: (item: any) => ({
+//       start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
+//       end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
+//     })
+//   },
+//   {
+//     key: 12,
+//     symbol: '000300',
+//     title: '沪深300',
+//     value: 3478.18,
+//     rate: 0.48,
+//     change: 16.52,
+//     color: (item: any) => ({
+//       start: item.change >= 0 ? '#ffd0d3' : '#cde3d2',
+//       end: item.change >= 0 ? '#ffe9eb' : '#e6f6ec'
+//     })
+//   }
+// ]);
+onMounted(() => {
+  fetchStockIndices();  // 在组件挂载时获取股票指数数据
+});
 
 interface GradientBgProps {
   gradientColor: string;
@@ -68,6 +107,7 @@ const [DefineGradientBg, GradientBg] = createReusableTemplate<GradientBgProps>()
 function getGradientColor(color: { start: string; end: string }) {
   return `linear-gradient(to bottom, ${color.start}, ${color.end})`;
 }
+
 </script>
 
 <template>
