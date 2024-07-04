@@ -8,11 +8,9 @@ import com.kclgroup.backend.service.StockInfoService;
 import com.kclgroup.backend.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -60,5 +58,12 @@ public class FavorController {
         if(favorService.getFavor(username,stockCode) == null)return Result.error("该股票未收藏过");
         favorService.cancelFavor(username,stockCode);
         return Result.success();
+    }
+    @GetMapping ("/getList")
+    public Result<List<Favor>> getFavorList() {
+        Map<String,Object> map = ThreadLocalUtil.get();
+        String username = (String) map.get("username");
+
+        return Result.success(favorService.getFavorList(username));
     }
 }

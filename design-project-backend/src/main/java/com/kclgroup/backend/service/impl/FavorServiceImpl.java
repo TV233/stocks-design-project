@@ -7,6 +7,8 @@ import com.kclgroup.backend.mapper.FavorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
 * @author 张小明
 * @description 针对表【favor】的数据库操作Service实现
@@ -31,6 +33,12 @@ public class FavorServiceImpl extends ServiceImpl<FavorMapper, Favor>
     @Override
     public void cancelFavor(String username, String stockCode) {
         favorMapper.deleteFavor(username,stockCode);
+    }
+
+    @Override
+    public List<Favor> getFavorList(String username) {
+        List<Favor> favorList = favorMapper.getFavorList(username);
+        return favorList;
     }
 
 }

@@ -10,7 +10,7 @@ class AuthService {
         params.append('username', user.username);
         params.append('password', user.password);
 
-        return axios.post(API_URL + 'user/login', params, {
+        return axios.post(API_URL + 'auth/login', params, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }

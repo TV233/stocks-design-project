@@ -3,6 +3,8 @@ package com.kclgroup.backend.service;
 import com.kclgroup.backend.pojo.entity.Favor;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author 张小明
 * @description 针对表【favor】的数据库操作Service
@@ -14,4 +16,6 @@ public interface FavorService extends IService<Favor> {
     void favor(String username,String stockCode);
 
     void cancelFavor(String username, String stockCode);
+
+    List<Favor> getFavorList(String username);
 }

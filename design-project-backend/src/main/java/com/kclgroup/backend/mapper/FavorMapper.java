@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
 * @author 张小明
 * @description 针对表【favor】的数据库操作Mapper
@@ -23,6 +25,8 @@ public interface FavorMapper extends BaseMapper<Favor> {
 
     @Delete("delete from favor where username=#{username} and favor_stock_code=#{stockCode}")
     void deleteFavor(String username, String stockCode);
+    @Select("select * from favor where username=#{username}")
+    List<Favor> getFavorList(String username);
 }
 
 
