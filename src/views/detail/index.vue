@@ -569,13 +569,14 @@ const onAdd = async code => {
         stockCode: code
       }
     });
+    console.log(response);
     if (response) {
       alert('添加成功');
     } else {
-      alert('添加失败');
+      alert('已在自选股中');
     }
   } catch (error) {
-    alertr('添加失败');
+    // alert('已在自选股中');
   }
 };
 </script>

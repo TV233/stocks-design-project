@@ -61,12 +61,12 @@ const onDelete = async code => {
     });
     if (response) {
       favorData.value = favorData.value.filter(item => item.code !== code);
-      console.log('删除成功');
+      alert('删除成功');
     } else {
-      console.error('删除失败:', response.data.message);
+      alert('删除失败，请联系管理员');
     }
   } catch (error) {
-    console.error('删除失败:', error);
+    alert('删除失败，请联系管理员');
   }
 };
 </script>
