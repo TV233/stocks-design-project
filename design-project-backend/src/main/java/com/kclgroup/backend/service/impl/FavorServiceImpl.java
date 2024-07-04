@@ -2,6 +2,7 @@ package com.kclgroup.backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kclgroup.backend.pojo.entity.Favor;
+import com.kclgroup.backend.pojo.vo.FavorVo;
 import com.kclgroup.backend.service.FavorService;
 import com.kclgroup.backend.mapper.FavorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,8 @@ public class FavorServiceImpl extends ServiceImpl<FavorMapper, Favor>
     }
 
     @Override
-    public List<Favor> getFavorList(String username) {
-        List<Favor> favorList = favorMapper.getFavorList(username);
+    public List<FavorVo> getFavorList(String username) {
+        List<FavorVo> favorList = favorMapper.getFavorList(username);
         return favorList;
     }
 

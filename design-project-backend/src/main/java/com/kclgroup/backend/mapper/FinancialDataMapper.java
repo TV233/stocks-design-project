@@ -17,7 +17,7 @@ import java.util.List;
 public interface FinancialDataMapper extends BaseMapper<FinancialData> {
     @Select("select * from financial_data where stock_code=#{stockCode}")
     FinancialData getByStockCode(String stockCode);
-    @Select("select * from financial_data")
+    @Select("select * from financial_data where stock_code=#{stockCode}")
     List<FinancialData> findByStockCode(String stockCode);
 }
 

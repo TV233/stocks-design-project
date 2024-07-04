@@ -2,6 +2,7 @@ package com.kclgroup.backend.service;
 
 import com.kclgroup.backend.pojo.entity.Favor;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kclgroup.backend.pojo.vo.FavorVo;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface FavorService extends IService<Favor> {
 
     void cancelFavor(String username, String stockCode);
 
-    List<Favor> getFavorList(String username);
+    List<FavorVo> getFavorList(String username);
 }

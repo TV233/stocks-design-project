@@ -3,6 +3,7 @@ package com.kclgroup.backend.controller;
 import com.kclgroup.backend.pojo.entity.Favor;
 import com.kclgroup.backend.pojo.entity.Result;
 import com.kclgroup.backend.pojo.entity.StockInfo;
+import com.kclgroup.backend.pojo.vo.FavorVo;
 import com.kclgroup.backend.service.FavorService;
 import com.kclgroup.backend.service.StockInfoService;
 import com.kclgroup.backend.util.ThreadLocalUtil;
@@ -60,10 +61,10 @@ public class FavorController {
         return Result.success();
     }
     @GetMapping ("/getList")
-    public Result<List<Favor>> getFavorList() {
+    public Result<List<FavorVo>> getFavorList() {
         Map<String,Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
-
-        return Result.success(favorService.getFavorList(username));
+        List<FavorVo> favorList = favorService.getFavorList(username);
+        return Result.success(favorList);
     }
 }
