@@ -4,6 +4,51 @@
  * All backend api type
  */
 declare namespace Api {
+  namespace StockDetail {
+    interface FinancialData {
+      code: number;
+      message: string;
+      data: {
+        stockCode: string;
+        summary: string;
+        financialDataByYear: {
+          [year: string]: {
+            totalOperatereveIncrease: number;
+            parentNetprofitIncrease: number;
+            dnetprofitatpcTcalIncrease: number | null;
+          };
+        };
+      };
+    }
+
+    interface DataAndPrediction {
+      code: number;
+      message: string;
+      data: {
+        stockCode: string;
+        stockName: string;
+        industry: null;
+        latestPrice: string;
+        priceChangeRate: string;
+        priceChange: string;
+        riseSpeed: string;
+        ratingOrgNum: number;
+        ratingBuyNum: number;
+        ratingAddNum: number;
+        ratingNeutralNum: number | null;
+        ratingReduceNum: number | null;
+        ratingSaleNum: number | null;
+        year1: number;
+        eps1: number;
+        year2: number;
+        eps2: number;
+        year3: number;
+        eps3: number;
+        year4: number;
+        eps4: number;
+      };
+    }
+  }
   namespace Common {
     /** common params of paginating */
     interface PaginatingCommonParams {

@@ -78,6 +78,7 @@ declare module 'vue' {
     IconMdiDrag: typeof import('~icons/mdi/drag')['default']
     IconMdiRefresh: typeof import('~icons/mdi/refresh')['default']
     'IconSvgSpinners:blocksShuffle3': typeof import('~icons/svg-spinners/blocks-shuffle3')['default']
+    'IconTdesign:compass': typeof import('~icons/tdesign/compass')['default']
     LangSwitch: typeof import('./../components/common/lang-switch.vue')['default']
     LookForward: typeof import('./../components/custom/look-forward.vue')['default']
     MenuToggler: typeof import('./../components/common/menu-toggler.vue')['default']

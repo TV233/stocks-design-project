@@ -18,72 +18,79 @@ import { localStg } from '@/utils/storage';
  */
 export function createRouteGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
-    const location = await initRoute(to);
+    try {
+      const location = await initRoute(to);
 
-    if (location) {
-      next(location);
-      return;
+      if (location) {
+        next(location);
+        return;
+      }
+
+      const authStore = useAuthStore();
+
+      const rootRoute: RouteKey = 'root';
+      const loginRoute: RouteKey = 'login';
+      const noAuthorizationRoute: RouteKey = '403';
+
+      const isLogin = Boolean(localStg.get('token'));
+      const needLogin = !to.meta.constant;
+      const routeRoles = to.meta.roles || [];
+
+      // Ensure roles is an array
+      const userRoles = authStore.userInfo.roles || [];
+      const hasRole = userRoles.some(role => routeRoles.includes(role));
+
+      const hasAuth = authStore.isStaticSuper || !routeRoles.length || hasRole;
+
+      const routeSwitches: CommonType.StrategicPattern[] = [
+        // if it is login route when logged in, then switch to the root page
+        {
+          condition: isLogin && to.name === loginRoute,
+          callback: () => {
+            next({ name: rootRoute });
+          }
+        },
+        // if it is constant route, then it is allowed to access directly
+        {
+          condition: !needLogin,
+          callback: () => {
+            handleRouteSwitch(to, from, next);
+          }
+        },
+        // if the route need login but the user is not logged in, then switch to the login page
+        {
+          condition: !isLogin && needLogin,
+          callback: () => {
+            next({ name: loginRoute, query: { redirect: to.fullPath } });
+          }
+        },
+        // if the user is logged in and has authorization, then it is allowed to access
+        {
+          condition: isLogin && needLogin && hasAuth,
+          callback: () => {
+            handleRouteSwitch(to, from, next);
+          }
+        },
+        // if the user is logged in but does not have authorization, then switch to the 403 page
+        {
+          condition: isLogin && needLogin && !hasAuth,
+          callback: () => {
+            next({ name: noAuthorizationRoute });
+          }
+        }
+      ];
+
+      routeSwitches.some(({ condition, callback }) => {
+        if (condition) {
+          callback();
+        }
+
+        return condition;
+      });
+    } catch (error) {
+      console.error('Route guard error:', error);
+      next({ name: 'error' }); // 假设有一个错误处理路由
     }
-
-    const authStore = useAuthStore();
-
-    const rootRoute: RouteKey = 'root';
-    const loginRoute: RouteKey = 'login';
-    const noAuthorizationRoute: RouteKey = '403';
-
-    const isLogin = Boolean(localStg.get('token'));
-    const needLogin = !to.meta.constant;
-    const routeRoles = to.meta.roles || [];
-
-    const hasRole = authStore.userInfo.roles.some(role => routeRoles.includes(role));
-
-    const hasAuth = authStore.isStaticSuper || !routeRoles.length || hasRole;
-
-    const routeSwitches: CommonType.StrategicPattern[] = [
-      // if it is login route when logged in, then switch to the root page
-      {
-        condition: isLogin && to.name === loginRoute,
-        callback: () => {
-          next({ name: rootRoute });
-        }
-      },
-      // if it is constant route, then it is allowed to access directly
-      {
-        condition: !needLogin,
-        callback: () => {
-          handleRouteSwitch(to, from, next);
-        }
-      },
-      // if the route need login but the user is not logged in, then switch to the login page
-      {
-        condition: !isLogin && needLogin,
-        callback: () => {
-          next({ name: loginRoute, query: { redirect: to.fullPath } });
-        }
-      },
-      // if the user is logged in and has authorization, then it is allowed to access
-      {
-        condition: isLogin && needLogin && hasAuth,
-        callback: () => {
-          handleRouteSwitch(to, from, next);
-        }
-      },
-      // if the user is logged in but does not have authorization, then switch to the 403 page
-      {
-        condition: isLogin && needLogin && !hasAuth,
-        callback: () => {
-          next({ name: noAuthorizationRoute });
-        }
-      }
-    ];
-
-    routeSwitches.some(({ condition, callback }) => {
-      if (condition) {
-        callback();
-      }
-
-      return condition;
-    });
   });
 }
 
