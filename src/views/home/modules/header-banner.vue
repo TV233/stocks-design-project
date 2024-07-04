@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
+import { request } from '@/service/request';
 
 defineOptions({
   name: 'HeaderBanner'
@@ -11,8 +12,46 @@ let chartInstance: echarts.ECharts | null = null;
 
 const colors = ['#00c05a', '#e6a900', '#e00005']; // 调整颜色顺序，从绿渐变为红
 const fontColor = '#0089fa';
-const emotionIndex = 0.6043; // 情绪指数值，范围从0到1，保留四位小数
+// const emotionIndex = 0.6043; // 情绪指数值，范围从0到1，保留四位小数
+const emotionIndex = ref<number>(0);
+  async function fetchEmotionIndex() {
+  try {
+    // Using the custom request function to fetch the emotion index
+    const result = await request({
+      url: '/api/emotion_index',
+      method: 'GET'
+    });
 
+
+    // Assuming 'result' directly contains the 'emotionIndex' after response transformation
+    if (result) {
+      emotionIndex.value = result.data.emotionIndex;
+      updateChart();
+    } else {
+      console.error('No data returned for emotion index');
+    }
+  } catch (error) {
+    console.error('Error fetching emotion index:', error);
+    showErrorMsg(error.message); // Utilize the shared error handling function if necessary
+  }
+}
+
+function updateChart() {
+  if (chartInstance) {
+    chartInstance.setOption({
+      series: [
+        {
+          data: [
+            {
+              value: emotionIndex.value * 100,  // Update the gauge chart with the new value
+              name: '市场情绪指数'
+            }
+          ]
+        }
+      ]
+    });
+  }
+}
 const option = {
   backgroundColor: 'transparent', // 设置背景为透明
   series: [
@@ -127,6 +166,7 @@ onMounted(() => {
   if (chartRef.value) {
     chartInstance = echarts.init(chartRef.value);
     chartInstance.setOption(option);
+    fetchEmotionIndex();
   }
 });
 
