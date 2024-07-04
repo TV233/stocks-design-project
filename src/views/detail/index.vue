@@ -1,23 +1,52 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import * as echarts from 'echarts';
-import { fetchStockDataAndPrediction, fetchStockFinancialData } from '@/service/api/stock-detail';
+import { request } from '@/service/request';
+// import { fetchStockDataAndPrediction, fetchStockFinancialData } from '@/service/api/stock-detail';
 
-// 获取股票年报数据
-fetchStockFinancialData('000821').then(response => {
-  console.log(response.data);
-});
+const stockInfoData = ref([]);
 
-// 获取股票实时涨跌数据和预测数据
-fetchStockDataAndPrediction('000821').then(response => {
-  console.log(response.data);
-});
+// // 获取股票年报数据
+// fetchStockFinancialData('000821').then(response => {
+//   console.log(response.data);
+// });
+
+// // 获取股票实时涨跌数据和预测数据
+// fetchStockDataAndPrediction('000821').then(response => {
+//   console.log(response.data);
+// });
 
 const route = useRoute();
 const router = useRouter();
+const stockCode = route.query.stockCode;
+console.log(stockCode);
 
-const routeQuery = computed(() => JSON.stringify(route.query));
+// const routeQuery = computed(() => JSON.stringify(route.query));
+
+async function fetchStockFinancialData(stockCode) {
+  try {
+    const result = await request({
+      url: '/stock/financial_data',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      params: {
+        stockCode
+      },
+      method: 'GET'
+    });
+    if (result) {
+      console.log(result.data);
+      stockInfoData.value = result.data; // 存储获取到的股票指数数据
+    } else {
+      // console.error('Error fetching stock indices:', result.message);
+    }
+  } catch (error) {
+    // console.error('Error fetching stock indices:', error);
+  }
+}
+
 const stockDetail = ref({
   stockCode: '000821',
   stockName: '京山轻机',
@@ -127,6 +156,7 @@ onMounted(() => {
   if (chartRef.value) {
     chartInstance = echarts.init(chartRef.value);
     chartInstance.setOption(pieChartConfig);
+    fetchStockFinancialData(stockCode);
   }
 });
 
@@ -213,6 +243,82 @@ onUnmounted(() => {
 const lineChartRef = ref<HTMLDivElement | null>(null);
 let lineChartInstance: echarts.ECharts | null = null;
 
+// 定义图表配置
+const getLineChartConfig = data => {
+  return {
+    backgroundColor: 'transparent',
+    title: {
+      text: '股票年报数据 ',
+      left: 'center',
+      top: '2%'
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: ['营业总收入', '归母净利润', '扣非归母净利润'],
+      top: '8%'
+    },
+    xAxis: {
+      type: 'category',
+      data: Object.keys(data.financialDataByYear),
+      name: ' ',
+      nameLocation: 'middle',
+      nameGap: 25
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: '营业总收入',
+        nameLocation: 'middle',
+        nameGap: 40,
+        axisLabel: {
+          formatter: '{value}'
+        }
+      },
+      {
+        type: 'value',
+        name: '归母净利润/扣非归母净利润',
+        nameLocation: 'middle',
+        nameGap: 60,
+        axisLabel: {
+          formatter: '{value}'
+        }
+      }
+    ],
+    series: [
+      {
+        name: '营业总收入',
+        type: 'line',
+        yAxisIndex: 0,
+        data: Object.values(data.financialDataByYear).map(yearData => yearData.totalOperatereveIncrease),
+        itemStyle: {
+          color: '#ff0000'
+        }
+      },
+      {
+        name: '归母净利润',
+        type: 'line',
+        yAxisIndex: 1,
+        data: Object.values(data.financialDataByYear).map(yearData => yearData.parentNetprofitIncrease),
+        itemStyle: {
+          color: '#00ff00'
+        }
+      },
+      {
+        name: '扣非归母净利润',
+        type: 'line',
+        yAxisIndex: 1,
+        data: Object.values(data.financialDataByYear).map(yearData => yearData.dnetprofitatpcTcalIncrease),
+        itemStyle: {
+          color: '#0000ff'
+        }
+      }
+    ],
+    animationEasing: 'linear',
+    animationDuration: 2000
+  };
+};
 const lineChartConfig = {
   backgroundColor: 'transparent',
   title: {
@@ -296,7 +402,12 @@ const lineChartConfig = {
   animationEasing: 'linear',
   animationDuration: 2000
 };
-
+watch(stockInfoData, newData => {
+  if (lineChartInstance && newData && newData.financialDataByYear) {
+    const chartConfig = getLineChartConfig(newData);
+    lineChartInstance.setOption(chartConfig, true);
+  }
+});
 onMounted(() => {
   if (lineChartRef.value) {
     lineChartInstance = echarts.init(lineChartRef.value);

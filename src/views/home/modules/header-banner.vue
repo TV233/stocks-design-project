@@ -31,7 +31,7 @@ async function fetchEmotionIndex() {
     }
   } catch (error) {
     console.error('Error fetching emotion index:', error);
-    showErrorMsg(error.message); // Utilize the shared error handling function if necessary
+    // showErrorMsg(error.message); // Utilize the shared error handling function if necessary
   }
 }
 const marketInfo = ref({
