@@ -61,7 +61,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
       console.log('Login Token:', loginToken); // 调试输出
       localStg.set('token', loginToken);
       const pass = await loginByToken(loginToken);
-
+//
 
       if (pass) {
         await routeStore.initAuthRoute();
