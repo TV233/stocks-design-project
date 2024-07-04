@@ -1,90 +1,36 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import * as echarts from 'echarts';
 import { fetchStockDataAndPrediction, fetchStockFinancialData } from '@/service/api/stock-detail';
-
-// 获取股票年报数据
-fetchStockFinancialData('000821').then(response => {
-  console.log(response.data);
-});
-
-// 获取股票实时涨跌数据和预测数据
-fetchStockDataAndPrediction('000821').then(response => {
-  console.log(response.data);
-});
 
 const route = useRoute();
 const router = useRouter();
 
-const routeQuery = computed(() => JSON.stringify(route.query));
-const stockDetail = ref({
-  stockCode: '000821',
-  stockName: '京山轻机',
-  industry: null,
-  latestPrice: '11.56',
-  priceChangeRate: '2.76',
-  priceChange: '0.31',
-  riseSpeed: '0.09',
-  ratingOrgNum: 9,
-  ratingBuyNum: 7,
-  ratingAddNum: 2,
-  ratingNeutralNum: 0,
-  ratingReduceNum: 0,
-  ratingSaleNum: 0,
-  year1: 2023,
-  eps1: 0.540262,
-  year2: 2024,
-  eps2: 0.87375,
-  year3: 2025,
-  eps3: 1.11375,
-  year4: 2026,
-  eps4: 1.48125
+const stockDetail = ref({});
+const stockInfo = ref({});
+
+// 获取股票年报数据
+fetchStockFinancialData(route.query.stockCode).then(response => {
+  stockInfo.value = response.error.response.data.data;
 });
-const stockInfo = ref({
-  stockCode: '000821',
-  summary: '2023年前三季度归母净利润同比大增62.2%，约为2627万元',
-  financialDataByYear: {
-    '2018': {
-      totalOperatereveIncrease: -19.974,
-      parentNetprofitIncrease: -124.6,
-      dnetprofitatpcTcalIncrease: -150.6
-    },
-    '2019': {
-      totalOperatereveIncrease: 20.398,
-      parentNetprofitIncrease: 127.1,
-      dnetprofitatpcTcalIncrease: -9
-    },
-    '2020': {
-      totalOperatereveIncrease: 14.624,
-      parentNetprofitIncrease: 156.6,
-      dnetprofitatpcTcalIncrease: -202.3
-    },
-    '2021': {
-      totalOperatereveIncrease: 0.796,
-      parentNetprofitIncrease: -1014.2,
-      dnetprofitatpcTcalIncrease: -12.6
-    },
-    '2022': {
-      totalOperatereveIncrease: -34.017,
-      parentNetprofitIncrease: -175.4,
-      dnetprofitatpcTcalIncrease: -178.4
-    },
-    '2023前三季度': {
-      totalOperatereveIncrease: -25.979,
-      parentNetprofitIncrease: -35.9,
-      dnetprofitatpcTcalIncrease: -34
-    }
-  }
+
+// 获取股票实时涨跌数据和预测数据
+fetchStockDataAndPrediction(route.query.stockCode).then(response => {
+  stockDetail.value = response.error.response.data.data;
 });
+
 // 将字符串属性转换为数字并保留两位小数
-stockDetail.value = {
-  ...stockDetail.value,
-  latestPrice: Math.round(Number.parseFloat(stockDetail.value.latestPrice) * 100) / 100,
-  priceChangeRate: Math.round(Number.parseFloat(stockDetail.value.priceChangeRate) * 100) / 100,
-  priceChange: Math.round(Number.parseFloat(stockDetail.value.priceChange) * 100) / 100,
-  riseSpeed: Math.round(Number.parseFloat(stockDetail.value.riseSpeed) * 100) / 100
-};
+const formattedStockDetail = computed(() => {
+  const detail = stockDetail.value;
+  return {
+    ...detail,
+    latestPrice: Math.round(Number.parseFloat(detail.latestPrice) * 100) / 100,
+    priceChangeRate: Math.round(Number.parseFloat(detail.priceChangeRate) * 100) / 100,
+    priceChange: Math.round(Number.parseFloat(detail.priceChange) * 100) / 100,
+    riseSpeed: Math.round(Number.parseFloat(detail.riseSpeed) * 100) / 100
+  };
+});
 
 const goBack = () => {
   router.back();
@@ -93,7 +39,7 @@ const goBack = () => {
 const chartRef = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
 
-const pieChartConfig = {
+const pieChartConfig = computed(() => ({
   backgroundColor: 'transparent',
   series: [
     {
@@ -121,12 +67,12 @@ const pieChartConfig = {
       }
     }
   ]
-};
+}));
 
 onMounted(() => {
   if (chartRef.value) {
     chartInstance = echarts.init(chartRef.value);
-    chartInstance.setOption(pieChartConfig);
+    chartInstance.setOption(pieChartConfig.value);
   }
 });
 
@@ -135,10 +81,11 @@ onUnmounted(() => {
     chartInstance.dispose();
   }
 });
+
 const barChartRef = ref<HTMLDivElement | null>(null);
 let barChartInstance: echarts.ECharts | null = null;
 
-const barChartConfig = {
+const barChartConfig = computed(() => ({
   backgroundColor: 'transparent',
   title: {
     text: '股票收益预测',
@@ -188,23 +135,16 @@ const barChartConfig = {
       }
     }
   ]
-};
+}));
 
 onMounted(() => {
-  if (chartRef.value) {
-    chartInstance = echarts.init(chartRef.value);
-    chartInstance.setOption(pieChartConfig);
-  }
   if (barChartRef.value) {
     barChartInstance = echarts.init(barChartRef.value);
-    barChartInstance.setOption(barChartConfig);
+    barChartInstance.setOption(barChartConfig.value);
   }
 });
 
 onUnmounted(() => {
-  if (chartInstance) {
-    chartInstance.dispose();
-  }
   if (barChartInstance) {
     barChartInstance.dispose();
   }
@@ -213,7 +153,7 @@ onUnmounted(() => {
 const lineChartRef = ref<HTMLDivElement | null>(null);
 let lineChartInstance: echarts.ECharts | null = null;
 
-const lineChartConfig = {
+const lineChartConfig = computed(() => ({
   backgroundColor: 'transparent',
   title: {
     text: '股票年报数据 ',
@@ -295,12 +235,12 @@ const lineChartConfig = {
   ],
   animationEasing: 'linear',
   animationDuration: 2000
-};
+}));
 
 onMounted(() => {
   if (lineChartRef.value) {
     lineChartInstance = echarts.init(lineChartRef.value);
-    lineChartInstance.setOption(lineChartConfig);
+    lineChartInstance.setOption(lineChartConfig.value);
   }
 });
 
@@ -309,6 +249,40 @@ onUnmounted(() => {
     lineChartInstance.dispose();
   }
 });
+// 监听 stockDetail 的变化
+watch(
+  stockDetail,
+  newVal => {
+    if (chartRef.value) {
+      chartInstance = echarts.init(chartRef.value);
+      chartInstance.setOption(pieChartConfig.value);
+    }
+    if (barChartRef.value) {
+      barChartInstance = echarts.init(barChartRef.value);
+      barChartInstance.setOption(barChartConfig.value);
+    }
+    if (lineChartRef.value) {
+      lineChartInstance = echarts.init(lineChartRef.value);
+      lineChartInstance.setOption(lineChartConfig.value);
+    }
+  },
+  { deep: true }
+);
+// 监听 stockDetail 的变化
+watch(stockInfo, (newVal) => {
+  if (chartRef.value) {
+    chartInstance = echarts.init(chartRef.value);
+    chartInstance.setOption(pieChartConfig.value);
+  }
+  if (barChartRef.value) {
+    barChartInstance = echarts.init(barChartRef.value);
+    barChartInstance.setOption(barChartConfig.value);
+  }
+  if (lineChartRef.value) {
+    lineChartInstance = echarts.init(lineChartRef.value);
+    lineChartInstance.setOption(lineChartConfig.value);
+  }
+}, { deep: true });
 </script>
 
 <template>
@@ -330,28 +304,28 @@ onUnmounted(() => {
               <CountTo
                 suffix=""
                 :start-value="1"
-                :end-value="stockDetail.latestPrice"
+                :end-value="formattedStockDetail.latestPrice"
                 :decimals="2"
                 class="text-6 font-sans"
-                :class="stockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+                :class="formattedStockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
               />
             </div>
             <div class="mt--2 flex justify-between">
               <CountTo
                 suffix=""
                 :start-value="1"
-                :end-value="stockDetail.priceChange"
+                :end-value="formattedStockDetail.priceChange"
                 :decimals="2"
                 class="text-3 font-sans"
-                :class="stockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+                :class="formattedStockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
               />
               <CountTo
                 suffix="%"
                 :start-value="1"
-                :end-value="stockDetail.priceChangeRate"
+                :end-value="formattedStockDetail.priceChangeRate"
                 :decimals="2"
                 class="ml-1.5 text-3 font-sans"
-                :class="stockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
+                :class="formattedStockDetail.priceChange >= 0 ? 'text-[#fe2435]' : 'text-[#08aa4b]'"
               />
             </div>
           </div>
@@ -392,4 +366,3 @@ onUnmounted(() => {
   height: 20rem;
 }
 </style>
-(: { data: any; })(: { data: any; }): { name: any; value: any; }: number: number: number: number

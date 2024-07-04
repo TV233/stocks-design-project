@@ -46,3 +46,20 @@ export function fetchRefreshToken(refreshToken: string) {
 export function fetchCustomBackendError(code: string, msg: string) {
   return request({ url: '/auth/error', params: { code, msg } });
 }
+
+/**
+ * 用户注册
+ *
+ * @param username 用户名
+ * @param password 密码
+ */
+export function registerUser(username: string, password: string) {
+  return request<Api.Auth.Register>({
+    url: 'http://localhost:8080/auth/register',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data: `username=${username}&password=${password}`
+  });
+}

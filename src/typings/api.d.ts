@@ -106,7 +106,13 @@ declare namespace Api {
       userName: string;
     }
   }
-
+  namespace Auth {
+    interface Register {
+      code: number;
+      message: string;
+      data: null;
+    }
+  }
   /**
    * Namespace Route
    *

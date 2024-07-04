@@ -122,7 +122,7 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
         return;
       }
 
-      showErrorMsg(request.state, message);
+      // showErrorMsg(request.state, message);
     }
   }
 );
@@ -154,17 +154,6 @@ export const demoRequest = createRequest<App.Service.DemoResponse>(
     transformBackendResponse(response) {
       return response.data.result;
     },
-    onError(error) {
-      // when the request is fail, you can show error message
 
-      let message = error.message;
-
-      // show backend error message
-      if (error.code === BACKEND_ERROR_CODE) {
-        message = error.response?.data?.message || message;
-      }
-
-      window.$message?.error(message);
-    }
   }
 );

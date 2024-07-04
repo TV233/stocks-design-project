@@ -37,7 +37,10 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
 async function handleSubmit() {
   await validate();
   await authStore.login(model.userName, model.password);
-}
+  if (Response.code !== '0') {
+      window.$message?.error('用户名不正确');
+
+}}
 </script>
 
 <template>
