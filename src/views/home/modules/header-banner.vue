@@ -14,14 +14,13 @@ const colors = ['#00c05a', '#e6a900', '#e00005']; // 调整颜色顺序，从绿
 const fontColor = '#0089fa';
 // const emotionIndex = 0.6043; // 情绪指数值，范围从0到1，保留四位小数
 const emotionIndex = ref<number>(0);
-  async function fetchEmotionIndex() {
+async function fetchEmotionIndex() {
   try {
     // Using the custom request function to fetch the emotion index
     const result = await request({
       url: '/api/emotion_index',
       method: 'GET'
     });
-
 
     // Assuming 'result' directly contains the 'emotionIndex' after response transformation
     if (result) {
@@ -35,6 +34,32 @@ const emotionIndex = ref<number>(0);
     showErrorMsg(error.message); // Utilize the shared error handling function if necessary
   }
 }
+const marketInfo = ref({
+  positionIndex: 49,
+  title: '把握市场节奏仍是关键',
+  content: '热点轮动进一步提速 把握市场节奏仍是关键 '
+});
+async function fetchTopText() {
+  try {
+    // Using the custom request function to fetch the emotion index
+    const result = await request({
+      url: '/api/top_text',
+      method: 'GET'
+    });
+
+    // Assuming 'result' directly contains the 'emotionIndex' after response transformation
+    if (result) {
+      marketInfo.value.positionIndex = result.data.positionIndex;
+      marketInfo.value.title = result.data.title;
+      marketInfo.value.content = result.data.content;
+      console.log(marketInfo.value);
+    } else {
+      console.error('No data returned for emotion index');
+    }
+  } catch (error) {
+    console.error('Error fetching emotion index:', error);
+  }
+}
 
 function updateChart() {
   if (chartInstance) {
@@ -43,7 +68,7 @@ function updateChart() {
         {
           data: [
             {
-              value: emotionIndex.value * 100,  // Update the gauge chart with the new value
+              value: emotionIndex.value * 100, // Update the gauge chart with the new value
               name: '市场情绪指数'
             }
           ]
@@ -79,7 +104,7 @@ const option = {
       },
       data: [
         {
-          value: emotionIndex * 100, // 将情绪指数转换为百分比
+          value: emotionIndex.value * 100, // 将情绪指数转换为百分比
           name: '市场情绪指数'
         }
       ],
@@ -157,16 +182,13 @@ const option = {
   ]
 };
 
-const marketInfo = ref({
-  positionIndex: 49,
-  title: '把握市场节奏仍是关键',
-  content: '热点轮动进一步提速 把握市场节奏仍是关键 '
-});
+
 onMounted(() => {
   if (chartRef.value) {
     chartInstance = echarts.init(chartRef.value);
     chartInstance.setOption(option);
     fetchEmotionIndex();
+    fetchTopText();
   }
 });
 
@@ -185,10 +207,10 @@ onUnmounted(() => {
     </div>
     <ARow :gutter="[16, 16]">
       <ACol :span="12" :md="10">
-        <div class="text-5 font-sans mt-2 ml-7 mr--22">{{ marketInfo.content }}</div>
+        <div class="ml-7 mr--22 mt-2 text-5 font-sans">{{ marketInfo.content }}</div>
       </ACol>
       <ACol :span="24" :md="6">
-        <div ref="chartRef" class="chart-container mt--25 "></div>
+        <div ref="chartRef" class="chart-container mt--25"></div>
       </ACol>
     </ARow>
   </ACard>
