@@ -65,6 +65,10 @@ const updateUserInfo = async () => {
 };
 
 const updateUserPassword = async () => {
+  if (userInfo.value.password !== userInfo.value.password2) {
+    alert('两次密码输入不一致');
+    return;
+  }
   try {
     const response = await request({
       url: '/user/updatePwd',
@@ -76,13 +80,14 @@ const updateUserPassword = async () => {
       }
     });
     if (response) {
-      console.log('密码更新成功');
+      alert('密码更新成功');
       visible.value = false;
+      window.location.reload();
     } else {
-      console.error('密码更新失败:', response.message);
+      alert('密码更新失败:'+ response.message);
     }
   } catch (error) {
-    console.error('密码更新失败:', error);
+    // alert('密码更新失败:'+ response.message);
   }
 };
 
