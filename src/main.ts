@@ -1,6 +1,5 @@
 import { createApp } from 'vue';
 import './plugins/assets';
-import Simplebar from 'simplebar-vue';
 import ElementPlus from 'element-plus';
 import { setupAppVersionNotification, setupDayjs, setupIconifyOffline, setupLoading, setupNProgress } from './plugins';
 import { setupStore } from './store';
@@ -29,8 +28,6 @@ async function setupApp() {
 
   setupAppVersionNotification();
 
-  // 全局注册 Simplebar 组件
-  app.component('Simplebar', Simplebar);
   app.use(ElementPlus);
   app.mount('#app');
 }

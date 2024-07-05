@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { ConfigProvider } from 'ant-design-vue';
-import Simplebar from 'simplebar-vue';
 import { useAppStore } from './store/modules/app';
 import { useThemeStore } from './store/modules/theme';
 import { antdLocales } from './locales/antd';
