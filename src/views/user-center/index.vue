@@ -31,18 +31,15 @@ const getUserInfo = async () => {
   try {
     const response = await request({
       url: '/user/userInfo',
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer your_token_here' // 替换为实际的 token
-      }
+      method: 'GET'
     });
-    if (response.code === 0) {
+    if (response) {
       userInfo.value = response.data;
     } else {
-      console.error('获取用户信息失败:', response.message);
+      // console.error('获取用户信息失败:', response.message);
     }
   } catch (error) {
-    console.error('获取用户信息失败:', error);
+    // console.error('获取用户信息失败:', error);
   }
 };
 
@@ -51,22 +48,19 @@ const updateUserInfo = async () => {
     const response = await request({
       url: '/user/update',
       method: 'PUT',
-      headers: {
-        Authorization: 'Bearer your_token_here' // 替换为实际的 token
-      },
       data: {
         id: userInfo.value.id,
         nickname: userInfo.value.nickname,
         email: userInfo.value.email
       }
     });
-    if (response.code === 0) {
-      console.log('用户信息更新成功');
+    if (response) {
+      alert('用户信息更新成功');
     } else {
-      console.error('用户信息更新失败:', response.message);
+      // alert('用户信息更新失败:'+ response.message);
     }
   } catch (error) {
-    console.error('用户信息更新失败:', error);
+    // alert('用户信息更新失败:'+ error);
   }
 };
 
@@ -75,16 +69,13 @@ const updateUserPassword = async () => {
     const response = await request({
       url: '/user/updatePwd',
       method: 'PATCH',
-      headers: {
-        Authorization: 'Bearer your_token_here' // 替换为实际的 token
-      },
       data: {
         old_pwd: model.value.old_pwd,
         new_pwd: model.value.new_pwd,
         re_pwd: model.value.re_pwd
       }
     });
-    if (response.code === 0) {
+    if (response) {
       console.log('密码更新成功');
       visible.value = false;
     } else {
@@ -131,25 +122,25 @@ getUserInfo();
     <!-- 用户信息 -->
     <ADescriptions title="用户信息" bordered>
       <ADescriptionsItem label="ID">
-        <AInput v-model:value="userInfo.id" @change="handleChange" />
+        <AInput v-model:value="userInfo.id" readonly />
       </ADescriptionsItem>
       <ADescriptionsItem label="用户名">
-        <AInput v-model:value="userInfo.username" @change="handleChange" />
+        <AInput v-model:value="userInfo.username" readonly />
       </ADescriptionsItem>
       <ADescriptionsItem label="昵称">
-        <AInput v-model:value="userInfo.nickname" @change="handleChange" />
+        <AInput v-model:value="userInfo.nickname" />
       </ADescriptionsItem>
       <ADescriptionsItem label="邮箱">
-        <AInput v-model:value="userInfo.email" @change="handleChange" />
+        <AInput v-model:value="userInfo.email" />
       </ADescriptionsItem>
       <ADescriptionsItem label="创建时间">
-        <AInput v-model:value="userInfo.createTime" @change="handleChange" />
+        <AInput v-model:value="userInfo.createTime" readonly />
       </ADescriptionsItem>
       <ADescriptionsItem label="更新时间">
-        <AInput v-model:value="userInfo.updateTime" @change="handleChange" />
+        <AInput v-model:value="userInfo.updateTime" readonly />
       </ADescriptionsItem>
     </ADescriptions>
-
+    <AButton type="primary" class="mt-4" @click="handleChange">提交信息更改</AButton>
     <!-- 重置密码按钮 -->
     <AButton type="primary" class="mt-4" @click="showModal">重置密码</AButton>
 
