@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { debounce } from 'lodash-es';
 import { useFullscreen } from '@vueuse/core';
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
@@ -45,24 +46,16 @@ const headerMenus = computed(() => {
 });
 
 const searchQuery = ref('');
-const searchResults = ref<Array<{ stockCode: string; stockName: string }>>([
-  {
-    stockCode: '000001',
-    stockName: '平安银行'
-  },
-  {
-    stockCode: '001359',
-    stockName: '平安电工'
-  },
-  {
-    stockCode: '601318',
-    stockName: '中国平安'
-  }
-]);
+const searchResults = ref<Array<{ stockCode: string; stockName: string }>>([]);
 const selectedStock = ref('');
 
 // 从后端获取搜索结果
-async function fetchSearchResults() {
+const fetchSearchResults = debounce(async () => {
+  // 检查查询字符串是否为空，且非空白字符
+  if (!searchQuery.value.trim()) {
+    searchResults.value = [];
+    return;
+  }
   try {
     const result = await request({
       url: '/stock/find',
@@ -71,15 +64,15 @@ async function fetchSearchResults() {
         stockName: searchQuery.value
       }
     });
-    if (result && result.code === 0) {
-      searchResults.value = result.data;
+    if (result) {
+      searchResults.value = result.data.slice(0, 1000);
     } else {
       // console.error('Error fetching search results:', result.message);
     }
   } catch (error) {
     // console.error('Error fetching search results:', error);
   }
-}
+}, 300); // 使用300毫秒的防抖
 
 const querySearchAsync = (queryString: string) => {
   searchQuery.value = queryString;
@@ -103,7 +96,7 @@ const handleSelect = (stockCode: string) => {
       filterable
       remote
       :remote-method="querySearchAsync"
-      placeholder="输入您想查询的股票名字或代码"
+      placeholder="输入您想查询的股票名"
       size="large"
       class="mr-66 !w-96"
       @change="handleSelect"
@@ -111,12 +104,11 @@ const handleSelect = (stockCode: string) => {
       <ElOption
         v-for="item in searchResults"
         :key="item.stockCode"
-        :label="item.stockName"
+        :label="item.stockName + ' ' + item.stockCode"
         :value="item.stockCode"
         @click="routerPushByKey('detail', { query: { stockCode: item.stockCode } })"
       />
     </ElSelect>
-
     <div class="h-full flex-y-center justify-end">
       <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
       <UserAvatar />
