@@ -1,16 +1,16 @@
-<script setup lang="ts">
-import { computed } from 'vue';
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
 import { useFullscreen } from '@vueuse/core';
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
 import { useRouteStore } from '@/store/modules/route';
+import { request } from '@/service/request';
+import { useRouterPush } from '@/hooks/common/router';
 import HorizontalMenu from '../global-menu/base-menu.vue';
 import GlobalLogo from '../global-logo/index.vue';
-import GlobalBreadcrumb from '../global-breadcrumb/index.vue';
 import { useMixMenuContext } from '../../context';
-import ThemeButton from './components/theme-button.vue';
 import UserAvatar from './components/user-avatar.vue';
-
+const { routerPushByKey } = useRouterPush();
 defineOptions({
   name: 'GlobalHeader'
 });
@@ -43,6 +43,52 @@ const headerMenus = computed(() => {
 
   return [];
 });
+
+const searchQuery = ref('');
+const searchResults = ref<Array<{ stockCode: string; stockName: string }>>([
+  {
+    stockCode: '000001',
+    stockName: '平安银行'
+  },
+  {
+    stockCode: '001359',
+    stockName: '平安电工'
+  },
+  {
+    stockCode: '601318',
+    stockName: '中国平安'
+  }
+]);
+const selectedStock = ref('');
+
+// 从后端获取搜索结果
+async function fetchSearchResults() {
+  try {
+    const result = await request({
+      url: '/stock/find',
+      method: 'GET',
+      params: {
+        stockName: searchQuery.value
+      }
+    });
+    if (result && result.code === 0) {
+      searchResults.value = result.data;
+    } else {
+      // console.error('Error fetching search results:', result.message);
+    }
+  } catch (error) {
+    // console.error('Error fetching search results:', error);
+  }
+}
+
+const querySearchAsync = (queryString: string) => {
+  searchQuery.value = queryString;
+  fetchSearchResults();
+};
+
+const handleSelect = (stockCode: string) => {
+  console.log(stockCode);
+};
 </script>
 
 <template>
@@ -51,19 +97,28 @@ const headerMenus = computed(() => {
     <HorizontalMenu v-if="showMenu" mode="horizontal" :menus="headerMenus" class="px-12px" />
     <div v-else class="h-full flex-y-center flex-1-hidden">
       <MenuToggler v-if="showMenuToggler" :collapsed="appStore.siderCollapse" @click="appStore.toggleSiderCollapse" />
-      <GlobalBreadcrumb v-if="!appStore.isMobile" class="ml-12px" />
     </div>
+    <ElSelect
+      v-model="selectedStock"
+      filterable
+      remote
+      :remote-method="querySearchAsync"
+      placeholder="输入您想查询的股票名字或代码"
+      size="large"
+      class="mr-66 !w-96"
+      @change="handleSelect"
+    >
+      <ElOption
+        v-for="item in searchResults"
+        :key="item.stockCode"
+        :label="item.stockName"
+        :value="item.stockCode"
+        @click="routerPushByKey('detail', { query: { stockCode: item.stockCode } })"
+      />
+    </ElSelect>
+
     <div class="h-full flex-y-center justify-end">
       <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
-      <!-- 不能切换语言 -->
-      <!-- <LangSwitch :lang="appStore.locale" :lang-options="appStore.localeOptions" @change-lang="appStore.changeLocale" /> -->
-      <!-- 不能切换主题 -->
-      <!--<ThemeSchemaSwitch
-        :theme-schema="themeStore.themeScheme"
-        :is-dark="themeStore.darkMode"
-        @switch="themeStore.toggleThemeScheme"
-      />
-      <ThemeButton />-->
       <UserAvatar />
     </div>
   </DarkModeContainer>
