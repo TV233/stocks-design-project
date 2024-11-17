@@ -59,18 +59,19 @@ async function handleSubmit() {
       url: '/auth/register',
       data: formData
     });
-
+    alert('注册成功');
     // Handle the response
     console.log('aa', response); // 没有收到回应
 
     console.log('a', response.data.code);
-    if (response.data.code === '0') {
-      window.$message?.success(response.data.message || $t('page.login.common.registerSuccess'));
+    if (response) {
+      // alert('注册成功');
+      // window.$message?.success(response.data.message || $t('page.login.common.registerSuccess'));
     } else {
-      window.$message?.error(response.data.message || $t('page.login.common.registerFail'));
+      // window.$message?.error(response.data.message || $t('page.login.common.registerFail'));
     }
   } catch (error) {
-    window.$message?.error($t('page.login.common.networkError'));
+    // window.$message?.error($t('page.login.common.networkError'));
   }
 }
 // async function handleSubmit() {
@@ -95,7 +96,7 @@ async function handleSubmit() {
           {{ label }}
         </AButton>
       </div>
-    </AFormItem> 
+    </AFormItem>
 -->
     <AFormItem name="password">
       <AInputPassword

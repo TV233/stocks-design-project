@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed ,onMounted,ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouterPush } from '@/hooks/common/router';
 import { request } from '@/service/request';
 defineOptions({ name: 'BestRank' });
@@ -14,9 +14,9 @@ async function fetchPredict() {
       method: 'GET'
     });
     if (result) {
-   // 添加排名到数据
-    ranksData.value = result.data.map((item, index) => ({
-        id: index + 1,  // 动态生成排名
+      // 添加排名到数据
+      ranksData.value = result.data.map((item, index) => ({
+        id: index + 1, // 动态生成排名
         ...item
       }));
     } else {
@@ -84,6 +84,5 @@ const handleAction = (record: any) => {
     </ATable>
   </Simplebar>
 </template>
-
 
 <style scoped></style>

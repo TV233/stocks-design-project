@@ -78,6 +78,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
         }
       }
     } catch (error) {
+      alert("用户名或密码错误");
       console.error('Login error:', error);
       resetStore();
     } finally {

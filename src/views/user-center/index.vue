@@ -147,7 +147,7 @@ getUserInfo();
     </ADescriptions>
     <AButton type="primary" class="mt-4" @click="handleChange">提交信息更改</AButton>
     <!-- 重置密码按钮 -->
-    <AButton type="primary" class="mt-4" @click="showModal">重置密码</AButton>
+    <AButton type="primary" class="mt-4" @click="showModal">修改密码</AButton>
 
     <!-- 重置密码模态框 -->
     <AModal v-model:visible="visible" title="重置密码" @ok="handleOk" @cancel="handleCancel">
