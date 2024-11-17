@@ -1,10 +1,7 @@
 package com.kclgroup.backend.controller;
 
 import com.kclgroup.backend.pojo.entity.*;
-import com.kclgroup.backend.pojo.vo.IndexKlineVo;
-import com.kclgroup.backend.pojo.vo.PredictVo;
-import com.kclgroup.backend.pojo.vo.StockIndicesVo;
-import com.kclgroup.backend.pojo.vo.StockPriceVo;
+import com.kclgroup.backend.pojo.vo.*;
 import com.kclgroup.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -84,6 +81,12 @@ public class OverviewController {
     public Result<List<IndexKlineVo>> indexKlines(@RequestParam String indexCode) {
         List<IndexKlineVo> indexKlines = indexKlinesService.getIndexKlines(indexCode);
         return Result.success(indexKlines);
+    }
+
+    @GetMapping("/upDown")
+    public Result<PriceVo> upDown() {
+        PriceVo priceVo = stockPricesService.getUpDown();
+        return Result.success(priceVo);
     }
 
 }

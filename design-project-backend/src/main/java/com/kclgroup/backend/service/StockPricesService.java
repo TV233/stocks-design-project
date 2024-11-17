@@ -3,6 +3,7 @@ package com.kclgroup.backend.service;
 import com.kclgroup.backend.pojo.entity.StockIndices;
 import com.kclgroup.backend.pojo.entity.StockPrices;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kclgroup.backend.pojo.vo.PriceVo;
 import com.kclgroup.backend.pojo.vo.StockPriceVo;
 
 import java.util.List;
@@ -24,4 +25,5 @@ public interface StockPricesService extends IService<StockPrices> {
 
     String getRiseSpeed(String stockCode);
 
+    PriceVo getUpDown();
 }

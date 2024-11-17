@@ -2,6 +2,7 @@ package com.kclgroup.backend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kclgroup.backend.pojo.entity.StockPrices;
+import com.kclgroup.backend.pojo.vo.PriceVo;
 import com.kclgroup.backend.pojo.vo.StockPriceVo;
 import com.kclgroup.backend.service.StockPricesService;
 import com.kclgroup.backend.mapper.StockPricesMapper;
@@ -49,6 +50,12 @@ public class StockPricesServiceImpl extends ServiceImpl<StockPricesMapper, Stock
     public String getRiseSpeed(String stockCode) {
         String riseSpeed = stockPricesMapper.getRiseSpeed(stockCode);
         return riseSpeed;
+    }
+
+    @Override
+    public PriceVo getUpDown() {
+        PriceVo priceVo = stockPricesMapper.getUpDown();
+        return priceVo;
     }
 }
 

@@ -2,6 +2,7 @@ package com.kclgroup.backend.mapper;
 
 import com.kclgroup.backend.pojo.entity.StockPrices;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kclgroup.backend.pojo.vo.PriceVo;
 import com.kclgroup.backend.pojo.vo.StockPriceVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -27,6 +28,9 @@ public interface StockPricesMapper extends BaseMapper<StockPrices> {
     String getPriceChange(String stockCode);
     @Select("select rise_speed from stock_prices where stock_code=#{stockCode}")
     String getRiseSpeed(String stockCode);
+
+    @Select("SELECT COUNT(CASE WHEN price_change > 0 THEN 1 END) AS positiveChange,COUNT(CASE WHEN price_change < 0 THEN 1 END) AS negativeChange FROM stock_prices")
+    PriceVo getUpDown();
 }
 
 
