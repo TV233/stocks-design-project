@@ -1,27 +1,38 @@
-import './assets/main.css'
-import axios from 'axios';
-import AuthService from './services/AuthService';
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from 'vue';
+import './plugins/assets';
+import Simplebar from 'simplebar-vue';
+import ElementPlus from 'element-plus';
+import { setupAppVersionNotification, setupDayjs, setupIconifyOffline, setupLoading, setupNProgress } from './plugins';
+import { setupStore } from './store';
+import { setupRouter } from './router';
+import { setupI18n } from './locales';
+import App from './App.vue';
+import 'simplebar-vue/dist/simplebar.min.css';
+import 'element-plus/dist/index.css';
 
-import App from './App.vue'
-import router from './router'
+async function setupApp() {
+  setupLoading();
 
-const app = createApp(App)
+  setupNProgress();
 
-app.use(createPinia())
-app.use(router)
+  setupIconifyOffline();
 
-app.mount('#app')
-axios.interceptors.request.use(
-    config => {
-        const currentUser = AuthService.getCurrentUser();
-        if (currentUser && currentUser.token) {
-            config.headers.Authorization = `${currentUser.token}`;
-        }
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-);
+  setupDayjs();
+
+  const app = createApp(App);
+
+  setupStore(app);
+
+  await setupRouter(app);
+
+  setupI18n(app);
+
+  setupAppVersionNotification();
+
+  // 全局注册 Simplebar 组件
+  app.component('Simplebar', Simplebar);
+  app.use(ElementPlus);
+  app.mount('#app');
+}
+
+setupApp();
